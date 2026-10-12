@@ -27,14 +27,14 @@
     if (openToday) {
       for (var i = 0; i < SLOTS.length; i++) {
         if (now.min >= SLOTS[i][0] && now.min < SLOTS[i][1]) return { open: true, text: "Jetzt geöffnet" };
-        if (now.min < SLOTS[i][0]) return { open: false, text: (i ? "Gerade Pause, wieder geöffnet ab " : "Heute geöffnet ab ") + hhmm(SLOTS[i][0]) };
+        if (now.min < SLOTS[i][0]) return { open: false, text: (i ? "Mittagspause · wieder ab " : "Heute ab ") + hhmm(SLOTS[i][0]) + (i ? "" : " geöffnet") };
       }
     }
     for (var d = 1; d <= 7; d++) {
       var next = (now.day + d) % 7;
       if (OPEN_DAYS.indexOf(next) > -1) {
         var when = d === 1 ? "morgen" : DAYNAMES[next];
-        return { open: false, text: (openToday ? "Jetzt geschlossen" : "Heute Ruhetag") + ", wieder geöffnet " + when + " ab " + hhmm(SLOTS[0][0]) };
+        return { open: false, text: (openToday ? "Geschlossen" : "Heute Ruhetag") + " · " + when + " ab " + hhmm(SLOTS[0][0]) };
       }
     }
   };

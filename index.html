@@ -150,25 +150,20 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero__inner">
-      <div class="hero__text">
-        <p class="kicker">Hünstetten, an der B417 · seit 1515</p>
-        <h1 class="hero__title">Seit über 500&nbsp;Jahren <span>einen Umweg wert.</span></h1>
-        <p class="lede">Gutbürgerliche Küche im denkmalgeschützten Vierseithof der Familie Alberti. Im Sommer sitzt man draußen im Hof.</p>
-        <div class="btn-row">
-          <a class="btn btn--primary" href="tel:+4961268321">Tisch reservieren: 06126 8321</a>
-          <a class="hero__link" href="/huehnerkirche-vorschau/speisekarte">Zur Speisekarte <span aria-hidden="true">→</span></a>
-        </div>
-        <p class="open-status" data-open-status hidden></p>
-        <p class="hero__facts">Ruhetag ist Montag und Freitag.<br>Bei Google 4,3&nbsp;★ aus 653&nbsp;Bewertungen.</p>
+    <picture class="hero__bg">
+      <source type="image/avif" srcset="/huehnerkirche-vorschau/assets/img/hof-weit-800.avif 800w, /huehnerkirche-vorschau/assets/img/hof-weit-1280.avif 1280w, /huehnerkirche-vorschau/assets/img/hof-weit-1920.avif 1920w" sizes="100vw">
+      <source type="image/webp" srcset="/huehnerkirche-vorschau/assets/img/hof-weit-800.webp 800w, /huehnerkirche-vorschau/assets/img/hof-weit-1280.webp 1280w, /huehnerkirche-vorschau/assets/img/hof-weit-1920.webp 1920w" sizes="100vw">
+      <img src="/huehnerkirche-vorschau/assets/img/hof-weit-1280.jpg" alt="Der Gasthof Hühnerkirche, ein historischer Vierseithof mit Schieferdach und Dachreiter, umgeben von grünen Feldern an der B417 bei Hünstetten" width="1280" height="720" fetchpriority="high">
+    </picture>
+    <div class="wrap hero__content">
+      <p class="kicker">Hünstetten, an der B417 · seit 1515</p>
+      <h1 class="hero__title">Seit über 500&nbsp;Jahren <span>einen Umweg wert.</span></h1>
+      <p class="lede">Gutbürgerliche Küche im denkmalgeschützten Vierseithof der Familie Alberti. Im Sommer sitzt man draußen im Hof.</p>
+      <div class="btn-row">
+        <a class="btn btn--light" href="tel:+4961268321">Tisch reservieren: 06126 8321</a>
+        <a class="hero__link" href="/huehnerkirche-vorschau/speisekarte">Zur Speisekarte <span aria-hidden="true">→</span></a>
       </div>
-      <figure class="hero__figure">
-        <picture>
-          <source type="image/avif" srcset="/huehnerkirche-vorschau/assets/img/hof-weit-800.avif 800w, /huehnerkirche-vorschau/assets/img/hof-weit-1280.avif 1280w, /huehnerkirche-vorschau/assets/img/hof-weit-1920.avif 1920w" sizes="(min-width: 900px) 56vw, 100vw">
-          <source type="image/webp" srcset="/huehnerkirche-vorschau/assets/img/hof-weit-800.webp 800w, /huehnerkirche-vorschau/assets/img/hof-weit-1280.webp 1280w, /huehnerkirche-vorschau/assets/img/hof-weit-1920.webp 1920w" sizes="(min-width: 900px) 56vw, 100vw">
-          <img src="/huehnerkirche-vorschau/assets/img/hof-weit-1280.jpg" alt="Der Gasthof Hühnerkirche, ein historischer Vierseithof mit Schieferdach und Dachreiter, umgeben von grünen Feldern an der B417 bei Hünstetten" width="1280" height="720" fetchpriority="high">
-        </picture>
-      </figure>
+      <p class="hero__facts">Ruhetag ist Montag und Freitag.<br>Bei Google 4,3&nbsp;★ aus 653&nbsp;Bewertungen.</p>
     </div>
   </section>
 
@@ -200,14 +195,19 @@
       <h2>Küche, Hof und Parkplatz</h2>
       <div class="features">
         <div class="feature">
+          <!-- FOTO folgt: Gericht (z. B. Schnitzel mit Bratkartoffeln) -->
+          <div class="ph" aria-hidden="true"><span>Foto folgt · Gericht</span></div>
           <h3>Deftige Küche</h3>
           <p>Schnitzel, Sauerbraten mit Klößen, Bratkartoffeln, Wirsing, Handkäs mit Musik. Große Portionen, keine Deko auf dem Teller, die keiner isst.</p>
         </div>
         <div class="feature">
+          <!-- FOTO folgt: Innenhof/Biergarten im Sommer -->
+          <div class="ph" aria-hidden="true"><span>Foto folgt · Hof im Sommer</span></div>
           <h3>Ein Hof im Sommer</h3>
           <p>Bei gutem Wetter wird der historische Innenhof zum Biergarten. Dort sitzt man im Schatten und ein Stück weg von der Straße.</p>
         </div>
         <div class="feature">
+          <img class="feature__img" src="/huehnerkirche-vorschau/assets/img/hof-weit-800.webp" alt="Der Gasthof von oben mit Hof und Parkplätzen an der Straße" width="800" height="450" loading="lazy">
           <h3>Platz zum Parken</h3>
           <p>Die Parkplätze liegen direkt am Haus und sind kostenlos. Auch eine größere Runde findet dort Platz.</p>
         </div>
@@ -275,6 +275,14 @@
 </main>
 
 <!-- FOOTER -->
+<div class="callbar">
+  <div class="wrap callbar__inner">
+    <p class="open-status" data-open-status hidden></p>
+    <span class="callbar__note">Reservierung nur telefonisch</span>
+    <a class="callbar__phone" href="tel:+4961268321"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg>06126&nbsp;8321</a>
+  </div>
+</div>
+
 <footer class="site-footer">
   <div class="wrap">
     <div class="footer-grid">
