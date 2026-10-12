@@ -1,0 +1,8 @@
+/* Fallback ohne JavaScript: Hauptmenü als sichtbare Liste statt Drawer, kein Burger.
+   Wird nur via <noscript> eingebunden. */
+.nav { flex-wrap: wrap; }
+.nav-toggle { display: none !important; }
+.nav__menu {
+  position: static; transform: none; box-shadow: none; inset: auto;
+  flex-basis: 100%; padding: 0.25rem 0 0.6rem; border-bottom: none;
+}

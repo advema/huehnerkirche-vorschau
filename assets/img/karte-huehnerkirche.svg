@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" role="img" aria-label="Lageskizze: Gasthof Hühnerkirche an der B417, Kreuzung mit der L3275 zwischen Limbach, Hünstetten und Wallbach">
+  <defs>
+    <style>
+      .lbl{font-family:Georgia,'Times New Roman',serif;fill:#3c4550}
+      .vill{font-family:Georgia,'Times New Roman',serif;fill:#2b3742;font-weight:bold}
+    </style>
+  </defs>
+
+  <!-- Grund -->
+  <rect width="1200" height="560" fill="#ECE7D8"/>
+
+  <!-- Felder (dezente Flächen) -->
+  <path d="M0 300 L470 300 L520 560 L0 560 Z" fill="#E4E7D3"/>
+  <path d="M700 300 L1200 330 L1200 560 L740 560 Z" fill="#E6E9D6"/>
+  <path d="M760 0 L1200 0 L1200 250 L820 210 Z" fill="#E4E7D3"/>
+
+  <!-- Wald -->
+  <g fill="#C6D0BB">
+    <path d="M0 0 H540 L470 150 Q300 120 180 150 Q80 165 0 150 Z"/>
+    <circle cx="980" cy="70" r="46"/><circle cx="1050" cy="90" r="52"/><circle cx="1120" cy="66" r="40"/>
+    <circle cx="1160" cy="120" r="44"/>
+  </g>
+
+  <!-- L3275 (Nebenstraße West–Ost über die Kreuzung) -->
+  <path d="M120 470 Q360 400 585 270 Q820 150 1090 175" fill="none" stroke="#CDBF9E" stroke-width="16"/>
+  <path d="M120 470 Q360 400 585 270 Q820 150 1090 175" fill="none" stroke="#FBF7EF" stroke-width="9"/>
+
+  <!-- B417 (Bundesstraße, prominent, Nord–Süd) -->
+  <path d="M540 -10 Q600 160 588 268 Q574 400 636 570" fill="none" stroke="#C9A25A" stroke-width="34" opacity="0.5"/>
+  <path d="M540 -10 Q600 160 588 268 Q574 400 636 570" fill="none" stroke="#E8C879" stroke-width="22"/>
+  <path d="M540 -10 Q600 160 588 268 Q574 400 636 570" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="14 14"/>
+
+  <!-- Straßen-Labels -->
+  <g class="lbl" font-size="24">
+    <rect x="470" y="60" width="66" height="30" rx="4" fill="#2A4A87"/>
+    <text x="503" y="82" text-anchor="middle" fill="#fff" font-weight="bold">B417</text>
+    <text x="250" y="452" transform="rotate(-13 250 452)">L3275</text>
+    <text x="900" y="150" transform="rotate(-8 900 150)">L3275</text>
+  </g>
+
+  <!-- Orte -->
+  <g class="vill" font-size="23">
+    <circle cx="150" cy="470" r="6" fill="#6b7480"/><text x="166" y="476">Limbach</text>
+    <circle cx="1075" cy="180" r="6" fill="#6b7480"/><text x="1058" y="164" text-anchor="end">Wallbach</text>
+    <circle cx="705" cy="330" r="6" fill="#6b7480"/><text x="722" y="336">Hünstetten</text>
+  </g>
+
+  <!-- Gasthof-Marker: westlich (links) der B417 -->
+  <g transform="translate(505 292)">
+    <ellipse cx="0" cy="58" rx="26" ry="7" fill="rgba(30,26,20,.18)"/>
+    <path d="M0 54 C -30 18, -30 -10, 0 -34 C 30 -10, 30 18, 0 54 Z" fill="#2A4A87"/>
+    <circle cx="0" cy="2" r="11" fill="#E8C879"/>
+  </g>
+  <g class="vill" font-size="26">
+    <text x="505" y="384" text-anchor="middle">Gasthof Hühnerkirche</text>
+    <text x="505" y="410" text-anchor="middle" font-weight="normal" font-size="19" fill="#5a636e">Hühnerkirche 1 · 65510 Hünstetten</text>
+  </g>
+</svg>
