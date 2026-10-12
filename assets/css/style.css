@@ -76,7 +76,7 @@ body {
 img { max-width: 100%; height: auto; display: block; }
 h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; margin: 0 0 0.5em; text-wrap: balance; }
 h1 { font-size: var(--step-4); }
-h2 { font-size: var(--step-3); }
+h2 { font-size: clamp(1.9rem, 1.3rem + 2vw, 3rem); letter-spacing: -0.02em; }
 h3 { font-size: var(--step-1); }
 p { margin: 0 0 1.1em; max-width: 62ch; }
 a { color: var(--brass-text); text-underline-offset: 3px; text-decoration-thickness: 1px; }
@@ -94,7 +94,7 @@ a:hover { color: var(--brand); }
 /* ---------- Layout ---------- */
 .wrap { width: min(100% - 2*var(--gutter), var(--wrap)); margin-inline: auto; }
 .wrap--narrow { width: min(100% - 2*var(--gutter), 46rem); margin-inline: auto; }
-section { padding-block: clamp(2.6rem, 5vw, 4.5rem); }
+section { padding-block: clamp(3.5rem, 8vw, 7rem); }
 .lede { font-size: var(--step-1); line-height: 1.5; color: var(--slate); max-width: 40ch; }
 
 /* ---------- Buttons ---------- */
@@ -217,23 +217,23 @@ section { padding-block: clamp(2.6rem, 5vw, 4.5rem); }
 
 .hero__title {
   font-family: var(--font-display); font-weight: 600; color: var(--ink);
-  font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3.1rem); line-height: 1.1; letter-spacing: -0.015em;
-  margin: 0 0 1.2rem; max-width: 100%; overflow-wrap: break-word; text-wrap: balance;
+  font-size: clamp(2.4rem, 1.2rem + 2.6vw, 3.5rem); line-height: 1.04; letter-spacing: -0.025em;
+  margin: 0 0 1.4rem; max-width: 100%; overflow-wrap: break-word; text-wrap: balance;
 }
+.hero__title span { display: block; color: var(--brand); }
+.hero__link { align-self: center; font-weight: 600; color: var(--brand); text-decoration: none; padding: 0.6em 0.2em; }
+.hero__link span { display: inline-block; transition: transform .2s ease; }
+.hero__link:hover span { transform: translateX(4px); }
 .hero__text .lede { color: var(--slate); max-width: 46ch; margin-bottom: 0; font-size: var(--step-0); }
-.hero .btn-row { margin-top: 1.6rem; }
+.hero .btn-row { margin-top: 2rem; gap: 0.8rem 1.6rem; }
 
 .hero__facts { font-size: var(--step--1); color: var(--slate); margin: 1.6rem 0 0; padding-top: 1.2rem; border-top: 1px solid var(--line); }
 
 .hero__figure { position: relative; margin: 0; min-height: 48vh; order: 1; }
 @media (min-width: 900px) { .hero__figure { min-height: 0; order: 0; } }
-.hero__figure img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; display: block; }
-.hero__figure figcaption {
-  position: absolute; left: 1.2rem; bottom: 1.2rem;
-  background: var(--parchment);
-  color: var(--ink); font-size: var(--step--1); padding: 0.45em 0.9em; border-radius: var(--radius);
-  border: 1px solid var(--line);
-}
+.hero__figure { overflow: hidden; }
+.hero__figure img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; display: block; animation: hero-zoom 2.4s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes hero-zoom { from { transform: scale(1.08); } to { transform: none; } }
 
 /* ---------- Sektionen / Editorial ---------- */
 .bg-surface { background: var(--surface); }
@@ -241,25 +241,44 @@ section { padding-block: clamp(2.6rem, 5vw, 4.5rem); }
 .bg-brand h1, .bg-brand h2 { color: #fff; }
 .bg-brand .lede { color: #E9E1CE; }
 
+/* Seitenkopf der Unterseiten: Logo-Zeichnung als großes Wasserzeichen */
+.page-head { position: relative; overflow: hidden; padding-block: clamp(3.5rem, 7vw, 6rem) clamp(3rem, 6vw, 5rem); }
+.page-head::after {
+  content: ""; position: absolute; right: max(-4rem, calc((100vw - var(--wrap)) / 2 - 6rem)); bottom: -12%;
+  width: min(48vw, 520px); aspect-ratio: 480 / 416; pointer-events: none;
+  background: url("/huehnerkirche-vorschau/assets/img/logo-light-480.png") no-repeat center / contain; opacity: .09;
+}
+.page-head h1 { font-size: clamp(2.4rem, 1.4rem + 3vw, 4.2rem); letter-spacing: -0.025em; line-height: 1.04; max-width: 18ch; }
+.page-head .lede { max-width: 44ch; }
+
+/* Zweispaltig: Text neben Bild/Tabelle */
+.split { display: grid; gap: 2.5rem; align-items: center; }
+@media (min-width: 900px) { .split { grid-template-columns: 1fr 1fr; gap: clamp(3rem, 6vw, 6rem); } }
+.split > div > :last-child { margin-bottom: 0; }
+.split .figure { margin: 0; }
+.split .figure img { aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+.split--hours { align-items: start; }
+.split--hours .hours { max-width: none; margin: 0; font-size: var(--step-0); }
+
 /* Brotkrume */
 .breadcrumb { font-size: var(--step--1); margin: 0 0 1rem; opacity: .85; }
 .bg-brand .breadcrumb, .bg-brand .breadcrumb a { color: #E9E1CE; }
 
 .figure { position: relative; }
 .figure--wide { max-width: 66rem; margin: 2.8rem auto; }
-.figure img { border-radius: var(--radius); box-shadow: 0 18px 40px -28px rgba(30,26,20,.45); }
+.figure img { border-radius: var(--radius); box-shadow: 0 30px 60px -36px rgba(30,26,20,.55); }
 .figure figcaption { margin-top: 0.7rem; font-size: var(--step--1); color: var(--slate); }
 
 /* Feature-Karten (Küche/Atmosphäre) */
-.features { display: grid; gap: 0; margin-top: 2rem; border-top: 1px solid var(--line); }
+.features { display: grid; gap: 0; margin-top: 2.4rem; border-top: 2px solid var(--brass); }
 @media (min-width: 680px) { .features { grid-template-columns: repeat(3, 1fr); } }
 .feature { padding: 2rem 1.8rem 2.2rem; border-bottom: 1px solid var(--line); }
 @media (min-width: 680px) {
   .feature { padding: 2.4rem 2rem 2.6rem 0; border-bottom: none; }
   .feature + .feature { border-left: 1px solid var(--line); padding-left: 2rem; }
 }
-.feature h3 { color: var(--brand); margin-bottom: 0.35em; font-size: var(--step-1); }
-.feature p { font-size: var(--step--1); color: var(--slate); margin: 0; }
+.feature h3 { color: var(--brand); margin-bottom: 0.45em; font-size: var(--step-2); }
+.feature p { color: var(--slate); margin: 0; }
 
 /* ---------- Öffnungszeiten ---------- */
 .hours { border-collapse: collapse; width: 100%; max-width: 34rem; font-variant-numeric: tabular-nums; }
@@ -293,12 +312,21 @@ section { padding-block: clamp(2.6rem, 5vw, 4.5rem); }
 .gallery .wide { grid-column: span 2; }
 
 /* ---------- Speisekarte ---------- */
-.menu-group { margin-bottom: 3rem; }
-.menu-group > h3 { color: var(--brand); font-size: var(--step-1); border-bottom: 2px solid var(--brass); padding-bottom: 0.3em; display: inline-block; }
-.dish { display: grid; grid-template-columns: 1fr auto; gap: 0.4rem 1rem; align-items: baseline; padding: 0.9em 0; border-bottom: 1px dotted var(--line); }
-.dish h4 { font-family: var(--font-body); font-weight: 600; font-size: var(--step-0); margin: 0; }
-.dish p { font-size: var(--step--1); color: var(--slate); margin: 0.2em 0 0; grid-column: 1 / -1; }
-.dish .price { font-family: var(--font-display); color: var(--brass-text); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.menu-group { margin-bottom: 2.6rem; }
+.menu-group > h3 { color: var(--brand); font-size: var(--step-2); margin-bottom: 0.6rem; break-after: avoid; }
+.menu-group > .note { margin-top: -0.2rem; }
+/* Gericht ……… Preis (Punktlinie wie auf der gedruckten Karte) */
+.dish { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.5rem; padding: 0.55em 0; break-inside: avoid; }
+.dish h4 { font-family: var(--font-body); font-weight: 600; font-size: var(--step-0); line-height: 1.35; margin: 0; flex: 0 1 auto; }
+.dish:has(> .price)::after { content: ""; order: 1; flex: 1 0 1.5rem; border-bottom: 2px dotted color-mix(in srgb, var(--brass) 45%, transparent); transform: translateY(-0.3em); }
+.dish > .price { order: 2; }
+.dish p, .dish__opts { order: 3; flex-basis: 100%; }
+.dish p { font-size: var(--step--1); color: var(--slate); margin: 0.15em 0 0; }
+.dish__opts { list-style: none; margin: 0.2em 0 0; padding: 0; }
+.dish__opts li { display: flex; align-items: baseline; gap: 0.5rem; font-size: var(--step--1); color: var(--slate); padding: 0.1em 0 0.1em 1rem; }
+.dish__opts li::after { content: ""; order: 1; flex: 1 0 1rem; border-bottom: 2px dotted color-mix(in srgb, var(--brass) 30%, transparent); transform: translateY(-0.3em); }
+.dish__opts li .price { order: 2; }
+.dish .price { font-family: var(--font-display); font-weight: 600; color: var(--brass-text); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 /* Karten-Filter (Pillen) – ohne JS sind alle Karten untereinander sichtbar */
 .menu-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 2.2rem; }
@@ -310,9 +338,10 @@ section { padding-block: clamp(2.6rem, 5vw, 4.5rem); }
 }
 .menu-filter button:hover { background: color-mix(in srgb, var(--brand) 8%, transparent); }
 .menu-filter button[aria-pressed="true"] { background: var(--brand); color: #fff; }
-.menu-panel { margin-bottom: 3rem; }
+.menu-panel { margin-bottom: 4rem; columns: 2 24rem; column-gap: clamp(2.5rem, 6vw, 6rem); }
+.menu-panel > .menu-panel__title, .menu-panel > .note { column-span: all; }
 .menu-panel[hidden] { display: none; }
-.menu-panel__title { font-size: var(--step-3); margin-bottom: 1.2rem; }
+.menu-panel__title { font-size: clamp(2rem, 1.3rem + 2.4vw, 3.2rem); margin-bottom: 1.6rem; padding-bottom: 0.6rem; border-bottom: 2px solid var(--brass); }
 
 /* ---------- Kontakt / Info-Karten ---------- */
 .infocards { display: grid; gap: 1.5rem; }
@@ -383,7 +412,8 @@ section { padding-block: clamp(2.6rem, 5vw, 4.5rem); }
 /* ---------- Bewertungen ---------- */
 .reviews { display: grid; gap: 2rem 2.5rem; margin-top: 2rem; }
 @media (min-width: 860px) { .reviews { grid-template-columns: repeat(3, 1fr); } }
-.review { margin: 0; padding-top: 1.2rem; border-top: 2px solid var(--brass); display: flex; flex-direction: column; }
+.review { margin: 0; padding-top: 1.6rem; border-top: 1px solid var(--line); display: flex; flex-direction: column; }
+.review__body::before { content: "\201C"; display: block; height: 2.2rem; font-family: var(--font-display); font-style: normal; font-size: 4.5rem; line-height: 1; color: var(--brass); }
 .review__body { font-style: italic; line-height: 1.6; margin: 0 0 1rem; color: var(--ink); max-width: none; }
 .review__author { margin-top: auto; font-size: var(--step--1); color: var(--slate); }
 .review__author::before { content: "– "; }
