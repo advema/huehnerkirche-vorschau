@@ -3,26 +3,26 @@
    CI aus Logo + Luftbildern: Schiefer, Mauer-Creme, Feldgrün, Messing
    ============================================================ */
 
-/* ---------- Fonts (lokal, DSGVO §3a) ---------- */
+/* ---------- Fonts (lokal, DSGVO) – Vollkorn: kräftige Buchschrift von Friedrich Althausen ---------- */
 @font-face {
-  font-family: "Fraunces";
-  src: url("/huehnerkirche-vorschau/assets/fonts/fraunces-400.woff2") format("woff2");
+  font-family: "Vollkorn";
+  src: url("/huehnerkirche-vorschau/assets/fonts/vollkorn-400-normal.woff2") format("woff2");
   font-weight: 400; font-style: normal; font-display: swap;
 }
 @font-face {
-  font-family: "Fraunces";
-  src: url("/huehnerkirche-vorschau/assets/fonts/fraunces-600.woff2") format("woff2");
+  font-family: "Vollkorn";
+  src: url("/huehnerkirche-vorschau/assets/fonts/vollkorn-400-italic.woff2") format("woff2");
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: "Vollkorn";
+  src: url("/huehnerkirche-vorschau/assets/fonts/vollkorn-600-normal.woff2") format("woff2");
   font-weight: 600; font-style: normal; font-display: swap;
 }
 @font-face {
-  font-family: "Spectral";
-  src: url("/huehnerkirche-vorschau/assets/fonts/spectral-400.woff2") format("woff2");
-  font-weight: 400; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: "Spectral";
-  src: url("/huehnerkirche-vorschau/assets/fonts/spectral-600.woff2") format("woff2");
-  font-weight: 600; font-style: normal; font-display: swap;
+  font-family: "Vollkorn";
+  src: url("/huehnerkirche-vorschau/assets/fonts/vollkorn-700-normal.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
 }
 
 /* ---------- Tokens ---------- */
@@ -37,8 +37,8 @@
   --slate: #59636D;
   --line: #E5E1D8;
 
-  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
-  --font-body: "Spectral", Georgia, "Times New Roman", serif;
+  --font-display: "Vollkorn", Georgia, "Times New Roman", serif;
+  --font-body: "Vollkorn", Georgia, "Times New Roman", serif;
 
   --step--1: clamp(0.86rem, 0.83rem + 0.15vw, 0.95rem);
   --step-0:  clamp(1.05rem, 1.0rem + 0.25vw, 1.18rem);
@@ -72,11 +72,12 @@ body {
   color: var(--ink);
   background: var(--parchment);
   -webkit-font-smoothing: antialiased;
+  font-variant-numeric: lining-nums; /* Vollkorn hat sonst Mediävalziffern */
 }
 img { max-width: 100%; height: auto; display: block; }
 h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; margin: 0 0 0.5em; text-wrap: balance; }
 h1 { font-size: var(--step-4); }
-h2 { font-size: clamp(1.9rem, 1.3rem + 2vw, 3rem); letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.9rem, 1.3rem + 2vw, 3rem); letter-spacing: -0.01em; }
 h3 { font-size: var(--step-1); }
 p { margin: 0 0 1.1em; max-width: 62ch; }
 a { color: var(--brass-text); text-underline-offset: 3px; text-decoration-thickness: 1px; }
@@ -212,8 +213,8 @@ section { padding-block: clamp(3.5rem, 8vw, 7rem); }
 .kicker { font-style: italic; color: var(--brass-text); margin: 0 0 1rem; }
 .hero .kicker { color: #E4C16C; font-size: var(--step-0); }
 .hero__title {
-  font-family: var(--font-display); font-weight: 600; color: #fff;
-  font-size: clamp(2.5rem, 1rem + 3.4vw, 4.4rem); line-height: 1.03; letter-spacing: -0.03em;
+  font-family: var(--font-display); font-weight: 700; color: #fff;
+  font-size: clamp(2.5rem, 1rem + 3.4vw, 4.4rem); line-height: 1.05; letter-spacing: -0.015em;
   margin: 0 0 1.3rem; max-width: 17ch; overflow-wrap: break-word; text-wrap: balance;
 }
 .hero__title span { display: block; color: #E4C16C; }
@@ -240,7 +241,7 @@ body { padding-bottom: 3.6rem; }
 .callbar__phone {
   display: inline-flex; align-items: center; gap: 0.5em; flex: none; min-height: 44px;
   padding: 0.45em 1.1em; border-radius: 999px; background: #C9A25A; color: var(--ink);
-  font-weight: 600; text-decoration: none; font-variant-numeric: tabular-nums;
+  font-weight: 600; text-decoration: none; font-variant-numeric: lining-nums tabular-nums;
 }
 .callbar__phone:hover { background: #E4C16C; color: var(--ink); }
 .callbar__phone svg { width: 1.05em; height: 1.05em; }
@@ -266,7 +267,7 @@ body { padding-bottom: 3.6rem; }
     linear-gradient(180deg, rgba(30,55,103,.75) 0%, rgba(30,55,103,.92) 100%),
     image-set(url("/huehnerkirche-vorschau/assets/img/hof-weit-800.avif") type("image/avif"), url("/huehnerkirche-vorschau/assets/img/hof-weit-800.webp") type("image/webp")); }
 }
-.page-head h1 { font-size: clamp(2.4rem, 1.4rem + 3vw, 4.2rem); letter-spacing: -0.025em; line-height: 1.04; max-width: 18ch; }
+.page-head h1 { font-weight: 700; font-size: clamp(2.4rem, 1.4rem + 3vw, 4.2rem); letter-spacing: -0.015em; line-height: 1.04; max-width: 18ch; }
 .page-head .lede { max-width: 44ch; }
 
 /* Zweispaltig: Text neben Bild/Tabelle */
@@ -300,7 +301,7 @@ body { padding-bottom: 3.6rem; }
 .feature p { color: var(--slate); margin: 0; }
 
 /* ---------- Öffnungszeiten ---------- */
-.hours { border-collapse: collapse; width: 100%; max-width: 34rem; font-variant-numeric: tabular-nums; }
+.hours { border-collapse: collapse; width: 100%; max-width: 34rem; font-variant-numeric: lining-nums tabular-nums; }
 .hours th, .hours td { text-align: left; padding: 0.7em 0.4em; border-bottom: 1px solid var(--line); }
 .hours th { font-family: var(--font-body); font-weight: 600; }
 .hours td { text-align: right; color: var(--slate); }
@@ -369,9 +370,9 @@ body { padding-bottom: 3.6rem; }
 .dish { display: grid; grid-template-columns: 2.2rem 1fr auto; column-gap: 1rem; align-items: baseline; padding: 0.22em 0; }
 .menu-card--plain .dish { grid-template-columns: 1fr auto; }
 .menu-card--plain .menu-cols ~ .menu-cols .dish { grid-template-columns: 2.2rem 1fr auto; } /* Getränke haben Nummern */
-.dish__nr { color: var(--slate); font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+.dish__nr { color: var(--slate); font-size: var(--step--1); font-variant-numeric: lining-nums tabular-nums; }
 .dish h4 { font-family: var(--font-body); font-weight: 400; font-size: var(--step-0); line-height: 1.4; margin: 0; }
-.dish .price { grid-column: -2; justify-self: end; align-self: last baseline; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dish .price { grid-column: -2; justify-self: end; align-self: last baseline; font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
 .dish p { grid-column: -3 / -2; font-size: var(--step--1); font-style: italic; color: var(--slate); margin: 0; max-width: none; }
 .menu-card--plain .dish { padding: 0.55em 0; }
 /* Sonntag: Tagessuppe / Gericht / Nachtisch, Preis unten rechts */
@@ -399,7 +400,7 @@ body { padding-bottom: 3.6rem; }
 .cta-band__inner p { margin: 0; }
 .cta-phone {
   font-family: var(--font-display); font-weight: 600; font-size: var(--step-4); line-height: 1;
-  color: var(--brand); text-decoration: none; white-space: nowrap; font-variant-numeric: tabular-nums;
+  color: var(--brand); text-decoration: none; white-space: nowrap; font-variant-numeric: lining-nums tabular-nums;
 }
 .cta-phone:hover { color: var(--brand-deep); text-decoration: underline; text-decoration-thickness: 2px; }
 
