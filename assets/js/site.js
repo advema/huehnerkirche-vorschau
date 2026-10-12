@@ -8,6 +8,50 @@
   var year = String(new Date().getFullYear());
   Array.prototype.forEach.call(doc.querySelectorAll(".jahr"), function (el) { el.textContent = year; });
 
+  /* ---------- Live-Öffnungsstatus ---------- */
+  // Öffnungstage (0 = So) und Startzeiten. Ende wird nicht angezeigt, intern aber gebraucht:
+  // ponytail: Ende Mittag 14:30 / Abend 22:00 angenommen, hier anpassen, falls Küche anders schließt
+  var OPEN_DAYS = [0, 2, 3, 4, 6];
+  var SLOTS = [[12 * 60, 14 * 60 + 30], [17 * 60, 22 * 60]];
+  var DAYNAMES = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+  var hhmm = function (m) { return Math.floor(m / 60) + ":" + ("0" + (m % 60)).slice(-2) + " Uhr"; };
+  var berlinNow = function () {
+    // Immer deutsche Zeit, auch wenn jemand aus einer anderen Zeitzone schaut
+    var p = {};
+    new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Berlin", weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+      .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+    return { day: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(p.weekday), min: +p.hour * 60 + +p.minute };
+  };
+  var openStatus = function (now) {
+    var openToday = OPEN_DAYS.indexOf(now.day) > -1;
+    if (openToday) {
+      for (var i = 0; i < SLOTS.length; i++) {
+        if (now.min >= SLOTS[i][0] && now.min < SLOTS[i][1]) return { open: true, text: "Jetzt geöffnet" };
+        if (now.min < SLOTS[i][0]) return { open: false, text: (i ? "Gerade Pause, wieder geöffnet ab " : "Heute geöffnet ab ") + hhmm(SLOTS[i][0]) };
+      }
+    }
+    for (var d = 1; d <= 7; d++) {
+      var next = (now.day + d) % 7;
+      if (OPEN_DAYS.indexOf(next) > -1) {
+        var when = d === 1 ? "morgen" : DAYNAMES[next];
+        return { open: false, text: (openToday ? "Jetzt geschlossen" : "Heute Ruhetag") + ", wieder geöffnet " + when + " ab " + hhmm(SLOTS[0][0]) };
+      }
+    }
+  };
+  var statusEls = doc.querySelectorAll("[data-open-status]");
+  var renderStatus = function () {
+    var now = berlinNow(), s = openStatus(now);
+    Array.prototype.forEach.call(statusEls, function (el) {
+      el.textContent = s.text;
+      el.dataset.state = s.open ? "open" : "closed";
+      el.hidden = false;
+    });
+    Array.prototype.forEach.call(doc.querySelectorAll(".hours tr[data-days]"), function (tr) {
+      tr.toggleAttribute("data-today", tr.dataset.days.split(" ").indexOf(String(now.day)) > -1);
+    });
+  };
+  if (statusEls.length) { renderStatus(); setInterval(renderStatus, 60000); }
+
   /* ---------- Mobile-Navigation ---------- */
   var btn = doc.querySelector(".nav-toggle");
   var menu = doc.getElementById("nav-menu");
@@ -22,35 +66,6 @@
       if (e.key === "Escape" && menu.dataset.open === "true") { setOpen(false); btn.focus(); }
     });
     menu.addEventListener("click", function (e) { if (e.target.closest("a")) setOpen(false); });
-  }
-
-  /* ---------- Scroll-Reveal (sanftes Einblenden) ---------- */
-  var revealSel = ".section-center, main .figure, .feature, .gallery img, .infocard, .menu-group";
-  var targets = Array.prototype.slice.call(doc.querySelectorAll(revealSel));
-  if (targets.length) {
-    if (reduce || !("IntersectionObserver" in window)) {
-      targets.forEach(function (el) { el.classList.add("reveal", "is-visible"); });
-    } else {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) { e.target.classList.add("is-visible"); io.unobserve(e.target); }
-        });
-      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
-      targets.forEach(function (el) {
-        el.classList.add("reveal");
-        // Above-the-fold (z. B. Seitenkopf/H1) sofort zeigen -> kein LCP-Delay
-        if (el.getBoundingClientRect().top < window.innerHeight * 0.9) {
-          el.classList.add("is-visible");
-          return;
-        }
-        if (el.matches(".feature, .infocard, .gallery img")) {
-          var sibs = el.parentElement.children;
-          var idx = Array.prototype.indexOf.call(sibs, el);
-          el.style.transitionDelay = Math.min(idx, 4) * 0.08 + "s";
-        }
-        io.observe(el);
-      });
-    }
   }
 
   /* ---------- Galerie-Lightbox (mit Fokus-Falle) ---------- */

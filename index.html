@@ -103,9 +103,8 @@
         "result": { "@type": "Reservation", "name": "Tischreservierung" }
       },
       "openingHoursSpecification": [
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Monday", "opens": "17:00", "closes": "21:00" },
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday","Wednesday","Thursday","Saturday","Sunday"], "opens": "12:00", "closes": "14:00" },
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday","Wednesday","Thursday","Saturday","Sunday"], "opens": "17:00", "closes": "21:00" }
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday","Wednesday","Thursday","Saturday","Sunday"], "opens": "12:00" },
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday","Wednesday","Thursday","Saturday","Sunday"], "opens": "17:00" }
       ],
       "aggregateRating": {
         "@type": "AggregateRating",
@@ -116,9 +115,7 @@
       "review": [
         { "@type": "Review", "author": { "@type": "Person", "name": "Hans-Jörg M." }, "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }, "reviewBody": "Toller Ort zum „Futtern wie bei Muttern“. Sehr authentische Küche, einfach, aber geradlinig und sehr lecker. Schnitzel mit Bratkartoffeln und Wirsing, das passte super zusammen. Klare Empfehlung, ich komme wieder." },
         { "@type": "Review", "author": { "@type": "Person", "name": "Manfred B." }, "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }, "reviewBody": "Das Lokal ist angenehm aus der Zeit gefallen, man fühlt sich wie bei Oma. Ich saß draußen im Hof und habe es bei schönem Wetter sehr genossen. Roulade mit Klößen und Wirsing, dazu freundliche Beratung. Ein sehr angenehmer Aufenthalt." },
-        { "@type": "Review", "author": { "@type": "Person", "name": "Carsten K." }, "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }, "reviewBody": "Ein wahrer Geheimtipp inmitten der Natur! Gemütliche Atmosphäre, herzliche Gastfreundschaft und eine hervorragende regionale Küche. Besonders die aufmerksame Bedienung hat meinen Aufenthalt zu etwas Besonderem gemacht." },
-        { "@type": "Review", "author": { "@type": "Person", "name": "Anja U." }, "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }, "reviewBody": "Seit über 40 Jahren mein Lieblingsrestaurant! Das urige Flair blieb zum Glück erhalten, ebenso die köstliche Küche. Mein Lieblingsessen: Rumpsteak mit Zwiebeln und den legendären Bratkartoffeln." },
-        { "@type": "Review", "author": { "@type": "Person", "name": "Jessica P." }, "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }, "reviewBody": "Ein klassischer ländlicher Gasthof mit urigem Charakter, in dem die Zeit stehen geblieben scheint, herrlich gemütlich. Die Küche erinnert an „Essen wie bei Oma“: bodenständig, ehrlich und von ausgezeichneter Qualität." }
+        { "@type": "Review", "author": { "@type": "Person", "name": "Anja U." }, "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }, "reviewBody": "Seit über 40 Jahren mein Lieblingsrestaurant! Das urige Flair blieb zum Glück erhalten, ebenso die köstliche Küche. Mein Lieblingsessen: Rumpsteak mit Zwiebeln und den legendären Bratkartoffeln." }
       ]
     }
   ]
@@ -156,18 +153,15 @@
   <section class="hero">
     <div class="hero__inner">
       <div class="hero__text">
-        <p class="kicker">Hünstetten · an der B417 · seit 1515</p>
+        <p class="kicker">Hünstetten, an der B417</p>
         <h1 class="hero__title">Seit über 500&nbsp;Jahren einen Umweg wert.</h1>
         <p class="lede">Gutbürgerliche Küche in einem denkmalgeschützten Vierseithof. Herzhaft, reichlich, ehrlich gekocht, und im Sommer ein Platz draußen im Hof.</p>
         <div class="btn-row">
           <a class="btn btn--primary" href="tel:+4961268321">Tisch reservieren: 06126 8321</a>
           <a class="btn btn--ghost" href="/huehnerkirche-vorschau/speisekarte">Zur Speisekarte</a>
         </div>
-        <dl class="hero__facts">
-          <div><dt>Bewertung</dt><dd>4,3 ★ · 653×</dd></div>
-          <div><dt>Ruhetag</dt><dd>Freitag</dd></div>
-          <div><dt>Spezialität</dt><dd>Eigener Apfelwein</dd></div>
-        </dl>
+        <p class="open-status" data-open-status hidden></p>
+        <p class="hero__facts">Ruhetag ist Montag und Freitag. Bei Google 4,3&nbsp;★ aus 653&nbsp;Bewertungen.</p>
       </div>
       <figure class="hero__figure">
         <picture>
@@ -183,10 +177,9 @@
   <!-- EINLEITUNG -->
   <section>
     <div class="wrap--narrow section-center">
-      <p class="eyebrow">Willkommen</p>
-      <h2>Essen, für das man auch die eine oder andere Landkreisgrenze überquert.</h2>
-      <p>Der Gasthof Hühnerkirche ist ein traditioneller Landgasthof mit gutbürgerlich-hessischer Küche an der B417 in Hünstetten. Er liegt etwas außerhalb, direkt an der Bundesstraße zwischen Wald und Feld. Wer zum ersten Mal kommt, kommt oft wegen der Lage. Wer wiederkommt, kommt wegen der Küche.</p>
-      <p>Bei uns gibt es ehrliche deutsche Hausmannskost ohne Schnickschnack: frisch gebraten, reichlich aufgetischt, so wie man es von einem Gasthof erwarten darf, den es länger gibt als die meisten Straßen ringsum. Dazu ein hausgemachter Apfelwein und, wenn das Wetter mitspielt, ein Tisch draußen im Hof.</p>
+      <h2>Ein Landgasthof an der B417</h2>
+      <p>Der Gasthof Hühnerkirche liegt etwas außerhalb von Hünstetten, direkt an der Bundesstraße zwischen Wald und Feld. Gekocht wird gutbürgerlich und hessisch, so wie in einem Landgasthof üblich.</p>
+      <p>Auf den Tisch kommen Schnitzel, Braten und Bratkartoffeln, und die Portionen sind groß. Dazu gibt es unseren eigenen Apfelwein. Bei gutem Wetter kann man draußen im Hof sitzen.</p>
       <div class="btn-row">
         <a class="btn btn--ghost" href="/huehnerkirche-vorschau/ueber-uns">Unsere Geschichte</a>
       </div>
@@ -204,25 +197,19 @@
   <!-- WAS UNS AUSMACHT -->
   <section class="bg-surface">
     <div class="wrap">
-      <div class="section-center">
-        <p class="eyebrow">Was Sie erwartet</p>
-        <h2>Drei Dinge, die hier zusammengehören.</h2>
-      </div>
+      <h2>Küche, Hof und Parkplatz</h2>
       <div class="features">
         <div class="feature">
-          <span class="feature__num">01</span>
           <h3>Deftige Küche</h3>
           <p>Schnitzel, Sauerbraten mit Klößen, Bratkartoffeln, Wirsing, Handkäs mit Musik. Große Portionen, keine Deko auf dem Teller, die keiner isst.</p>
         </div>
         <div class="feature">
-          <span class="feature__num">02</span>
           <h3>Ein Hof im Sommer</h3>
-          <p>Der historische Innenhof wird bei gutem Wetter zum Biergarten. Schatten, Ruhe und ein Feierabendbier abseits der Straße.</p>
+          <p>Bei gutem Wetter wird der historische Innenhof zum Biergarten. Dort sitzt man im Schatten und ein Stück weg von der Straße.</p>
         </div>
         <div class="feature">
-          <span class="feature__num">03</span>
           <h3>Platz zum Parken</h3>
-          <p>Direkt am Haus, kostenlos und ohne Parkplatzsuche, praktisch, wenn man mit der ganzen Familie oder einer größeren Runde kommt.</p>
+          <p>Die Parkplätze liegen direkt am Haus und sind kostenlos. Auch eine größere Runde findet dort Platz.</p>
         </div>
       </div>
     </div>
@@ -231,18 +218,18 @@
   <!-- ÖFFNUNGSZEITEN -->
   <section class="bg-brand">
     <div class="wrap--narrow section-center">
-      <p class="eyebrow">Öffnungszeiten</p>
-      <h2>Wann wir für Sie da sind.</h2>
-      <p>Warme Küche mittags und abends, außer freitags, da haben wir Ruhetag. Für größere Gruppen und Feiern rufen Sie am besten kurz vorher an, dann halten wir Ihnen Platz frei.</p>
+      <h2>Öffnungszeiten</h2>
+      <p>Warme Küche gibt es mittags und abends. Montag und Freitag ist Ruhetag. Wenn Sie mit einer größeren Gruppe kommen oder feiern möchten, rufen Sie bitte vorher an.</p>
+      <p class="open-status" data-open-status hidden></p>
       <table class="hours">
         <tbody>
-          <tr><th scope="row">Montag</th><td>17:00 – 21:00</td></tr>
-          <tr><th scope="row">Dienstag</th><td>12:00 – 14:00 · 17:00 – 21:00</td></tr>
-          <tr><th scope="row">Mittwoch</th><td>12:00 – 14:00 · 17:00 – 21:00</td></tr>
-          <tr><th scope="row">Donnerstag</th><td>12:00 – 14:00 · 17:00 – 21:00</td></tr>
-          <tr data-closed><th scope="row">Freitag</th><td>Ruhetag</td></tr>
-          <tr><th scope="row">Samstag</th><td>12:00 – 14:00 · 17:00 – 21:00</td></tr>
-          <tr><th scope="row">Sonntag</th><td>12:00 – 14:00 · 17:00 – 21:00</td></tr>
+          <tr data-closed data-days="1"><th scope="row">Montag</th><td>Ruhetag</td></tr>
+          <tr data-days="2"><th scope="row">Dienstag</th><td>ab 12:00 · ab 17:00 Uhr</td></tr>
+          <tr data-days="3"><th scope="row">Mittwoch</th><td>ab 12:00 · ab 17:00 Uhr</td></tr>
+          <tr data-days="4"><th scope="row">Donnerstag</th><td>ab 12:00 · ab 17:00 Uhr</td></tr>
+          <tr data-closed data-days="5"><th scope="row">Freitag</th><td>Ruhetag</td></tr>
+          <tr data-days="6"><th scope="row">Samstag</th><td>ab 12:00 · ab 17:00 Uhr</td></tr>
+          <tr data-days="0"><th scope="row">Sonntag</th><td>ab 12:00 · ab 17:00 Uhr</td></tr>
         </tbody>
       </table>
       <div class="btn-row">
@@ -251,56 +238,22 @@
     </div>
   </section>
 
-  <!-- IMPRESSIONEN -->
-  <section>
-    <div class="wrap">
-      <div class="section-center">
-        <p class="eyebrow">Impressionen</p>
-        <h2>Ein Haus, das man von Weitem erkennt.</h2>
-        <p>Der kleine Dachreiter über dem Schieferdach hat der Hühnerkirche ihren Namen und ihr Gesicht gegeben. Zwischen Feldern und Bundesstraße ist sie seit Generationen ein fester Orientierungspunkt.</p>
-      </div>
-      <div class="gallery">
-        <img class="wide" src="/huehnerkirche-vorschau/assets/img/hof-weit-800.webp" alt="Luftaufnahme des Gasthofs Hühnerkirche in der offenen Feldlandschaft an der B417" width="800" height="450" loading="lazy">
-        <img src="/huehnerkirche-vorschau/assets/img/hof-innenhof-800.webp" alt="Der Innenhof des Vierseithofs von oben" width="800" height="450" loading="lazy">
-        <img src="/huehnerkirche-vorschau/assets/img/hof-weit-480.webp" alt="Der Gasthof mit Dachreiter und Schieferdach" width="480" height="270" loading="lazy">
-      </div>
-      <p class="note text-center"><em>Weitere Fotos vom Innenraum und den Gerichten folgen.</em></p>
-    </div>
-  </section>
-
   <!-- BEWERTUNGEN -->
   <section class="bg-surface">
     <div class="wrap">
-      <div class="section-center">
-        <p class="eyebrow">Stimmen unserer Gäste</p>
-        <h2>4,3&nbsp;★ bei 653&nbsp;Google-Bewertungen.</h2>
-        <p>Was Gäste über den Gasthof Hühnerkirche schreiben.</p>
-      </div>
+      <h2>4,3&nbsp;★ bei 653&nbsp;Google-Bewertungen</h2>
       <div class="reviews">
         <figure class="review">
-          <div class="review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
           <blockquote class="review__body">Toller Ort zum „Futtern wie bei Muttern“. Sehr authentische Küche, einfach, aber geradlinig und sehr lecker. Schnitzel mit Bratkartoffeln und Wirsing, das passte super zusammen. So echte Küche suche ich oft und finde sie selten. Klare Empfehlung, ich komme wieder.</blockquote>
           <figcaption class="review__author">Hans-Jörg M.</figcaption>
         </figure>
         <figure class="review">
-          <div class="review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
           <blockquote class="review__body">Das Lokal ist angenehm aus der Zeit gefallen, man fühlt sich wie bei Oma. Ich saß draußen im Hof und habe es bei schönem Wetter sehr genossen. Roulade mit Klößen und Wirsing, vorab Spargelcremesuppe, dazu freundliche Beratung. Ein sehr angenehmer Aufenthalt.</blockquote>
           <figcaption class="review__author">Manfred B.</figcaption>
         </figure>
         <figure class="review">
-          <div class="review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
-          <blockquote class="review__body">Ein wahrer Geheimtipp inmitten der Natur! Gemütliche Atmosphäre, herzliche Gastfreundschaft und eine hervorragende regionale Küche. Besonders die aufmerksame Bedienung hat meinen Aufenthalt zu etwas Besonderem gemacht. Ein Ort, an den ich gerne zurückkehre!</blockquote>
-          <figcaption class="review__author">Carsten K.</figcaption>
-        </figure>
-        <figure class="review">
-          <div class="review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
           <blockquote class="review__body">Seit über 40 Jahren mein Lieblingsrestaurant! Das urige Flair blieb zum Glück erhalten, ebenso die köstliche Küche. Mein Lieblingsessen: Rumpsteak mit Zwiebeln und den legendären Bratkartoffeln. Ich hoffe, dort noch viele Jahre einkehren zu können.</blockquote>
           <figcaption class="review__author">Anja U.</figcaption>
-        </figure>
-        <figure class="review">
-          <div class="review__stars" aria-label="5 von 5 Sternen">★★★★★</div>
-          <blockquote class="review__body">Ein klassischer ländlicher Gasthof mit urigem Charakter, in dem die Zeit stehen geblieben scheint, herrlich gemütlich. Die Küche erinnert an „Essen wie bei Oma“: bodenständig, ehrlich und von ausgezeichneter Qualität. Wir kommen immer wieder gerne zurück.</blockquote>
-          <figcaption class="review__author">Jessica P.</figcaption>
         </figure>
       </div>
     </div>
@@ -309,9 +262,8 @@
   <!-- CTA -->
   <section class="cta-band">
     <div class="wrap">
-      <p class="eyebrow">Bis bald</p>
-      <h2>Reservieren Sie sich einen Platz.</h2>
-      <p>Ob zu zweit oder mit der ganzen Familie: ein kurzer Anruf genügt, und der Tisch steht.</p>
+      <h2>Tisch reservieren</h2>
+      <p>Am einfachsten telefonisch, auch für größere Runden.</p>
       <div class="btn-row">
         <a class="btn btn--primary" href="tel:+4961268321">06126 8321</a>
         <a class="btn btn--ghost" href="/huehnerkirche-vorschau/anfahrt">Anfahrt &amp; Kontakt</a>
