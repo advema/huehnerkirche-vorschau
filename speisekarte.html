@@ -143,81 +143,97 @@
         <a href="/huehnerkirche-vorschau/">Start</a> <span aria-hidden="true">›</span> Speisekarte
       </nav>
       <h1>Speisekarte</h1>
-      <p class="lede">Eine Auswahl unserer Gerichte. Dazu kommen wechselnde Tagesgerichte.</p>
+      <p class="lede">Abends, mittags unter der Woche und sonntags gibt es jeweils eine eigene Karte. Dazu kommen wechselnde Tagesgerichte.</p>
     </div>
   </section>
 
   <section>
     <div class="wrap--narrow">
-      <p class="callout">
-        <strong>Gut zu wissen:</strong> Unsere warmen Gerichte gibt es zu allen Öffnungszeiten, dazu wechselnde Tagesgerichte je nach Saison. Alle Preise inklusive Bedienung und Mehrwertsteuer. Angaben zu Zusatzstoffen und Allergenen erhalten Sie gern im Haus.
-      </p>
+      <div class="menu-filter" role="group" aria-label="Karte wählen" hidden>
+        <button type="button" aria-pressed="true" aria-controls="karte-abend">Abendkarte</button>
+        <button type="button" aria-pressed="false" aria-controls="karte-mittag-werktags">Mittagstisch werktags</button>
+        <button type="button" aria-pressed="false" aria-controls="karte-mittag-sonntags">Mittagstisch sonntags</button>
+      </div>
 
+      <div class="menu-panel" id="karte-abend">
+        <h2 class="menu-panel__title">Abendkarte</h2>
+        <div class="menu-group">
+          <h3>Warme Gerichte</h3>
+          <p class="note">Auf Wunsch mit Tagessuppe und Nachtisch.</p>
+          <div class="dish"><h4>Gulasch mit Spätzle und Wirsinggemüse</h4><span class="price">18,90 €</span></div>
+          <div class="dish"><h4>Bratwurst mit Salzkartoffeln und Wirsinggemüse</h4><span class="price">20,90 €</span></div>
+          <div class="dish"><h4>Kochfleisch mit Meerrettichsoße</h4><span class="price">22,40 €</span><p>Mit Salzkartoffeln und Wirsinggemüse.</p></div>
+          <div class="dish"><h4>Wildschweinbratwurst</h4><span class="price">22,40 €</span><p>Mit Salzkartoffeln und Schwarzwurzeln.</p></div>
+          <div class="dish"><h4>Schweinsbraten mit Serviettenknödel</h4><span class="price">22,40 €</span><p>Und Wirsinggemüse.</p></div>
+          <div class="dish"><h4>Rinderrouladen mit Kartoffelklößen</h4><span class="price">22,40 €</span><p>Und Wirsinggemüse.</p></div>
+          <div class="dish"><h4>Wildschweinragout mit Preiselbeeren</h4><span class="price">23,80 €</span><p>Mit Spätzle und Wirsinggemüse.</p></div>
+          <div class="dish"><h4>Kalbsleber mit Äpfeln und Zwiebeln</h4><span class="price">23,80 €</span><p>Mit Salzkartoffeln und Salat.</p></div>
+          <div class="dish"><h4>Wildschweinbraten mit Preiselbeeren</h4><span class="price">25,90 €</span><p>Mit Serviettenknödel und Wirsinggemüse.</p></div>
+        </div>
+
+        <div class="menu-group">
+          <h3>Herzhaftes &amp; Vesper</h3>
+          <div class="dish"><h4>Portion Handkäse</h4><span class="price">7,80 €</span></div>
+          <div class="dish"><h4>Portion Handkäse mit Musik</h4><span class="price">8,30 €</span><p>Der hessische Klassiker mit Zwiebeln, Essig und Öl.</p></div>
+          <div class="dish"><h4>Bratenbrot</h4><span class="price">8,90 €</span></div>
+          <div class="dish"><h4>Brot mit gekochtem Schinken</h4><span class="price">9,20 €</span></div>
+          <div class="dish"><h4>Schinkenbrot mit rohem Schinken</h4><span class="price">9,40 €</span></div>
+          <div class="dish"><h4>Portion Braten</h4><span class="price">9,70 €</span></div>
+          <div class="dish"><h4>Portion Schinken – roh oder gekocht</h4><span class="price">9,90 €</span></div>
+          <div class="dish"><h4>Stramme Lotte / Strammer Max</h4><span class="price">10,90 €</span><p>Mit zwei Spiegeleiern.</p></div>
+          <div class="dish"><h4>Portion Presskopf mit Bratkartoffeln</h4><span class="price">11,40 €</span></div>
+          <div class="dish"><h4>Sülze mit Bratkartoffeln</h4><span class="price">11,90 €</span></div>
+        </div>
+
+        <div class="menu-group">
+          <h3>Gebackenes &amp; Salate</h3>
+          <div class="dish"><h4>Gebackener Camembert (40 %)</h4><span class="price">10,60 €</span></div>
+          <div class="dish"><h4>Gebackener Camembert (60 %, groß)</h4><span class="price">11,40 €</span><p>Mit Toastbrot, Birne und Preiselbeeren.</p></div>
+          <div class="dish"><h4>Salat Edam</h4><span class="price">10,40 €</span><p>Mit Käse und Ei.</p></div>
+          <div class="dish"><h4>Salat des Hauses</h4><span class="price">10,90 €</span><p>Mit Käse, Schinken und Ei.</p></div>
+          <div class="dish"><h4>Kleiner Salat</h4><span class="price">3,80 €</span></div>
+          <div class="dish"><h4>Großer Salat</h4><span class="price">6,50 €</span></div>
+        </div>
+      </div>
+
+      <div class="menu-panel" id="karte-mittag-werktags">
+        <h2 class="menu-panel__title">Mittagstisch werktags</h2>
+        <p class="note">Die Karte für den Mittagstisch unter der Woche folgt in Kürze.</p>
+      </div>
+
+      <div class="menu-panel" id="karte-mittag-sonntags">
+        <h2 class="menu-panel__title">Mittagstisch sonntags</h2>
+        <p class="note">Die Karte für den Sonntagsmittag folgt in Kürze.</p>
+      </div>
+
+      <h2 class="menu-panel__title">Getränke</h2>
       <div class="menu-group">
-        <h2>Warme Gerichte</h2>
-        <p class="note">Auf Wunsch mit Tagessuppe und Nachtisch.</p>
-        <div class="dish"><h3>Gulasch mit Spätzle und Wirsinggemüse</h3><span class="price">18,90 €</span></div>
-        <div class="dish"><h3>Bratwurst mit Salzkartoffeln und Wirsinggemüse</h3><span class="price">20,90 €</span></div>
-        <div class="dish"><h3>Kochfleisch mit Meerrettichsoße</h3><span class="price">22,40 €</span><p>Mit Salzkartoffeln und Wirsinggemüse.</p></div>
-        <div class="dish"><h3>Wildschweinbratwurst</h3><span class="price">22,40 €</span><p>Mit Salzkartoffeln und Schwarzwurzeln.</p></div>
-        <div class="dish"><h3>Schweinsbraten mit Serviettenknödel</h3><span class="price">22,40 €</span><p>Und Wirsinggemüse.</p></div>
-        <div class="dish"><h3>Rinderrouladen mit Kartoffelklößen</h3><span class="price">22,40 €</span><p>Und Wirsinggemüse.</p></div>
-        <div class="dish"><h3>Wildschweinragout mit Preiselbeeren</h3><span class="price">23,80 €</span><p>Mit Spätzle und Wirsinggemüse.</p></div>
-        <div class="dish"><h3>Kalbsleber mit Äpfeln und Zwiebeln</h3><span class="price">23,80 €</span><p>Mit Salzkartoffeln und Salat.</p></div>
-        <div class="dish"><h3>Wildschweinbraten mit Preiselbeeren</h3><span class="price">25,90 €</span><p>Mit Serviettenknödel und Wirsinggemüse.</p></div>
+        <h3>Hausgemachter Apfelwein</h3>
+        <div class="dish"><h4>Glas Apfelwein 0,25 l</h4><span class="price">2,30 €</span></div>
+        <div class="dish"><h4>Glas Apfelwein 0,5 l</h4><span class="price">3,90 €</span></div>
+        <div class="dish"><h4>Apfelwein süß- oder sauergespritzt 0,25 l</h4><span class="price">2,30 €</span></div>
       </div>
 
       <div class="menu-group">
-        <h2>Abendkarte – Herzhaftes &amp; Vesper</h2>
-        <div class="dish"><h3>Portion Handkäse</h3><span class="price">7,80 €</span></div>
-        <div class="dish"><h3>Portion Handkäse mit Musik</h3><span class="price">8,30 €</span><p>Der hessische Klassiker mit Zwiebeln, Essig und Öl.</p></div>
-        <div class="dish"><h3>Bratenbrot</h3><span class="price">8,90 €</span></div>
-        <div class="dish"><h3>Brot mit gekochtem Schinken</h3><span class="price">9,20 €</span></div>
-        <div class="dish"><h3>Schinkenbrot mit rohem Schinken</h3><span class="price">9,40 €</span></div>
-        <div class="dish"><h3>Portion Braten</h3><span class="price">9,70 €</span></div>
-        <div class="dish"><h3>Portion Schinken – roh oder gekocht</h3><span class="price">9,90 €</span></div>
-        <div class="dish"><h3>Stramme Lotte / Strammer Max</h3><span class="price">10,90 €</span><p>Mit zwei Spiegeleiern.</p></div>
-        <div class="dish"><h3>Portion Presskopf mit Bratkartoffeln</h3><span class="price">11,40 €</span></div>
-        <div class="dish"><h3>Sülze mit Bratkartoffeln</h3><span class="price">11,90 €</span></div>
+        <h3>Bier vom Fass</h3>
+        <div class="dish"><h4>Landbier dunkel</h4><span class="price">3,30 / 4,60 €</span><p>0,3 l / 0,5 l.</p></div>
+        <div class="dish"><h4>Andechser hell</h4><span class="price">3,30 / 4,60 €</span><p>0,3 l / 0,5 l.</p></div>
+        <div class="dish"><h4>Würzburger Pils</h4><span class="price">3,30 / 4,60 €</span><p>0,3 l / 0,5 l.</p></div>
+        <div class="dish"><h4>Weizen &amp; Alkoholfreies</h4><span class="price">ab 3,30 €</span><p>Julius Echter Hefeweizen, Franziskaner, Erdinger alkoholfrei, Bitburger alkoholfrei.</p></div>
       </div>
 
       <div class="menu-group">
-        <h2>Gebackenes &amp; Salate</h2>
-        <div class="dish"><h3>Gebackener Camembert (40 %)</h3><span class="price">10,60 €</span></div>
-        <div class="dish"><h3>Gebackener Camembert (60 %, groß)</h3><span class="price">11,40 €</span><p>Mit Toastbrot, Birne und Preiselbeeren.</p></div>
-        <div class="dish"><h3>Salat Edam</h3><span class="price">10,40 €</span><p>Mit Käse und Ei.</p></div>
-        <div class="dish"><h3>Salat des Hauses</h3><span class="price">10,90 €</span><p>Mit Käse, Schinken und Ei.</p></div>
-        <div class="dish"><h3>Kleiner Salat</h3><span class="price">3,80 €</span></div>
-        <div class="dish"><h3>Großer Salat</h3><span class="price">6,50 €</span></div>
+        <h3>Wein im Ausschank (0,2 l)</h3>
+        <div class="dish"><h4>Riesling – lieblich, halbtrocken oder trocken</h4><span class="price">4,80 €</span><p>Weingut Spreitzer, Rheingau.</p></div>
+        <div class="dish"><h4>Grauer Burgunder, trocken</h4><span class="price">4,80 €</span><p>Weingut Bickensohl.</p></div>
+        <div class="dish"><h4>Spätburgunder Rotwein</h4><span class="price">4,80 €</span><p>Weingut Spreitzer.</p></div>
       </div>
 
-      <div class="menu-group">
-        <h2>Hausgemachter Apfelwein</h2>
-        <div class="dish"><h3>Glas Apfelwein 0,25 l</h3><span class="price">2,30 €</span></div>
-        <div class="dish"><h3>Glas Apfelwein 0,5 l</h3><span class="price">3,90 €</span></div>
-        <div class="dish"><h3>Apfelwein süß- oder sauergespritzt 0,25 l</h3><span class="price">2,30 €</span></div>
-      </div>
-
-      <div class="menu-group">
-        <h2>Bier vom Fass</h2>
-        <div class="dish"><h3>Landbier dunkel</h3><span class="price">3,30 / 4,60 €</span><p>0,3 l / 0,5 l.</p></div>
-        <div class="dish"><h3>Andechser hell</h3><span class="price">3,30 / 4,60 €</span><p>0,3 l / 0,5 l.</p></div>
-        <div class="dish"><h3>Würzburger Pils</h3><span class="price">3,30 / 4,60 €</span><p>0,3 l / 0,5 l.</p></div>
-        <div class="dish"><h3>Weizen &amp; Alkoholfreies</h3><span class="price">ab 3,30 €</span><p>Julius Echter Hefeweizen, Franziskaner, Erdinger alkoholfrei, Bitburger alkoholfrei.</p></div>
-      </div>
-
-      <div class="menu-group">
-        <h2>Wein im Ausschank (0,2 l)</h2>
-        <div class="dish"><h3>Riesling – lieblich, halbtrocken oder trocken</h3><span class="price">4,80 €</span><p>Weingut Spreitzer, Rheingau.</p></div>
-        <div class="dish"><h3>Grauer Burgunder, trocken</h3><span class="price">4,80 €</span><p>Weingut Bickensohl.</p></div>
-        <div class="dish"><h3>Spätburgunder Rotwein</h3><span class="price">4,80 €</span><p>Weingut Spreitzer.</p></div>
-      </div>
-
-      <p class="note">Dazu Apfelsaft, Traubensaft, Limonaden, Cola, Mineralwasser und mehr. In allen Preisen sind Bedienung und Mehrwertsteuer enthalten.</p>
+      <p class="note">Dazu Apfelsaft, Traubensaft, Limonaden, Cola, Mineralwasser und mehr.</p>
+      <p class="note">Alle Preise inklusive Bedienung und Mehrwertsteuer. Zu Zusatzstoffen und Allergenen fragen Sie bitte unser Personal.</p>
 
       <div class="btn-row">
-        <a class="btn btn--primary" href="tel:+4961268321">Tisch reservieren</a>
-        <a class="btn btn--ghost" href="/huehnerkirche-vorschau/anfahrt">Anfahrt &amp; Kontakt</a>
+        <a class="btn btn--primary" href="tel:+4961268321">Tisch reservieren: 06126 8321</a>
       </div>
     </div>
   </section>

@@ -294,11 +294,25 @@ section { padding-block: clamp(2.6rem, 5vw, 4.5rem); }
 
 /* ---------- Speisekarte ---------- */
 .menu-group { margin-bottom: 3rem; }
-.menu-group > h2 { color: var(--brand); font-size: var(--step-1); border-bottom: 2px solid var(--brass); padding-bottom: 0.3em; display: inline-block; }
+.menu-group > h3 { color: var(--brand); font-size: var(--step-1); border-bottom: 2px solid var(--brass); padding-bottom: 0.3em; display: inline-block; }
 .dish { display: grid; grid-template-columns: 1fr auto; gap: 0.4rem 1rem; align-items: baseline; padding: 0.9em 0; border-bottom: 1px dotted var(--line); }
-.dish h3 { font-family: var(--font-body); font-weight: 600; font-size: var(--step-0); margin: 0; }
+.dish h4 { font-family: var(--font-body); font-weight: 600; font-size: var(--step-0); margin: 0; }
 .dish p { font-size: var(--step--1); color: var(--slate); margin: 0.2em 0 0; grid-column: 1 / -1; }
 .dish .price { font-family: var(--font-display); color: var(--brass-text); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* Karten-Filter (Pillen) – ohne JS sind alle Karten untereinander sichtbar */
+.menu-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 2.2rem; }
+.menu-filter[hidden] { display: none; }
+.menu-filter button {
+  font: inherit; font-size: var(--step--1); font-weight: 600; cursor: pointer; min-height: 44px;
+  padding: 0.5em 1.15em; border-radius: 999px; border: 1.5px solid var(--brand);
+  background: var(--parchment); color: var(--brand); transition: background .15s, color .15s;
+}
+.menu-filter button:hover { background: color-mix(in srgb, var(--brand) 8%, transparent); }
+.menu-filter button[aria-pressed="true"] { background: var(--brand); color: #fff; }
+.menu-panel { margin-bottom: 3rem; }
+.menu-panel[hidden] { display: none; }
+.menu-panel__title { font-size: var(--step-3); margin-bottom: 1.2rem; }
 
 /* ---------- Kontakt / Info-Karten ---------- */
 .infocards { display: grid; gap: 1.5rem; }
@@ -315,7 +329,13 @@ section { padding-block: clamp(2.6rem, 5vw, 4.5rem); }
 }
 
 /* ---------- CTA-Band ---------- */
-.cta-band h2 { max-width: none; }
+.cta-band__inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 3rem; }
+.cta-band__inner p { margin: 0; }
+.cta-phone {
+  font-family: var(--font-display); font-weight: 600; font-size: var(--step-4); line-height: 1;
+  color: var(--brand); text-decoration: none; white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.cta-phone:hover { color: var(--brand-deep); text-decoration: underline; text-decoration-thickness: 2px; }
 
 /* ---------- Footer ---------- */
 .site-footer { background: var(--brand-deep); color: #D8D2C4; padding-block: clamp(3rem, 6vw, 4.5rem) 1.5rem; }

@@ -52,6 +52,28 @@
   };
   if (statusEls.length) { renderStatus(); setInterval(renderStatus, 60000); }
 
+  /* ---------- Speisekarten-Filter ---------- */
+  var filter = doc.querySelector(".menu-filter");
+  if (filter) {
+    var chips = Array.prototype.slice.call(filter.querySelectorAll("button"));
+    var show = function (id) {
+      chips.forEach(function (b) {
+        var on = b.getAttribute("aria-controls") === id;
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+        doc.getElementById(b.getAttribute("aria-controls")).hidden = !on;
+      });
+    };
+    chips.forEach(function (b) {
+      b.addEventListener("click", function () { show(b.getAttribute("aria-controls")); });
+    });
+    // Passende Karte vorwählen: mittags (vor 17 Uhr) Mittagstisch, sonst Abendkarte
+    // ponytail: Samstag zählt vorerst als werktags (mit Kunde klären)
+    var t = berlinNow();
+    var pick = t.min < SLOTS[1][0] ? (t.day === 0 ? "karte-mittag-sonntags" : "karte-mittag-werktags") : "karte-abend";
+    show(doc.querySelector("#" + pick + " .dish") ? pick : "karte-abend"); // leere Karte nicht vorwählen
+    filter.hidden = false;
+  }
+
   /* ---------- Mobile-Navigation ---------- */
   var btn = doc.querySelector(".nav-toggle");
   var menu = doc.getElementById("nav-menu");
