@@ -55,7 +55,7 @@
   --wrap: 72rem;
   --gutter: clamp(1.1rem, 4vw, 3rem);
   --radius: 3px;
-  --header-h: 72px;
+  --header-h: 80px;
   --callbar-h: 4.25rem;
 }
 
@@ -121,7 +121,7 @@ section { padding-block: clamp(3.5rem, 8vw, 7rem); }
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.6rem; }
 
 /* ---------- Header: liegt transparent über Foto-Köpfen, beim Scrollen dunkelblau ---------- */
-@media (min-width: 900px) { :root { --header-h: 120px; } }
+@media (min-width: 900px) { :root { --header-h: 140px; } }
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 40;
   background: var(--brand-deep); transition: background-color .3s ease, box-shadow .3s ease;
@@ -180,7 +180,7 @@ body:not(:has(.hero, .page-head)) main { padding-top: var(--header-h); }
   .nav__group--left  { grid-area: left;  justify-self: end;   padding-right: 2.6rem; }
   .nav__group--right { grid-area: right; justify-self: start; padding-left: 2.6rem; }
   .brand-badge { grid-area: badge; }
-  .brand-badge img { height: 104px; }
+  .brand-badge img { height: 100px; }
   /* beim Scrollen kompakter */
   .site-header.is-scrolled .nav { min-height: 84px; }
   .site-header.is-scrolled .brand-badge img { height: 68px; }
@@ -193,9 +193,9 @@ body:not(:has(.hero, .page-head)) main { padding-top: var(--header-h); }
 }
 @media (min-width: 900px) { .hero { min-height: max(40rem, calc(100svh - var(--callbar-h))); } }
 .hero__bg { position: absolute; inset: 0; z-index: -2; }
-/* Bild vergrößert und nach rechts geschoben: das Gasthaus steht im hellen, unverdeckten Bereich */
-.hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 0% 58%; transform-origin: 0% 58%; scale: 1.32; animation: hero-zoom 2.4s cubic-bezier(.2,.7,.2,1) both; }
-@media (max-width: 760px) { .hero__bg img { scale: 1; object-position: 52% 50%; transform-origin: 50% 50%; } }
+/* Motiv: Gasthaus rechts der Mitte, Straße links unter dem Text */
+.hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 55% 55%; animation: hero-zoom 2.4s cubic-bezier(.2,.7,.2,1) both; }
+@media (max-width: 760px) { .hero__bg img { object-position: 62% 50%; } }
 @keyframes hero-zoom { from { transform: scale(1.08); } to { transform: none; } }
 .hero::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
@@ -271,6 +271,13 @@ body { padding-bottom: var(--callbar-h); }
       image-set(url("/huehnerkirche-vorschau/assets/img/hof-weit-800.avif") type("image/avif"), url("/huehnerkirche-vorschau/assets/img/hof-weit-800.webp") type("image/webp"));
     background-size: auto, cover; background-position: 0 0, 55% 50%; }
 }
+/* Eigene Drohnenmotive je Unterseite, Gasthaus jeweils rechts im hellen Bereich */
+.page-head--fassade { background-image: linear-gradient(180deg, rgba(18,30,58,.6) 0%, rgba(18,30,58,0) 30%), linear-gradient(90deg, rgba(30,55,103,.95) 0%, rgba(30,55,103,.85) 30%, rgba(42,74,135,.3) 56%, rgba(42,74,135,0) 76%), image-set(url("/huehnerkirche-vorschau/assets/img/kopf-fassade-1920.avif") type("image/avif"), url("/huehnerkirche-vorschau/assets/img/kopf-fassade-1920.webp") type("image/webp"), url("/huehnerkirche-vorschau/assets/img/kopf-fassade-1280.jpg") type("image/jpeg")); background-size: auto, auto, cover; background-position: 0 0, 0 0, 100% 50%; }
+@media (max-width: 760px) { .page-head--fassade { background-image: linear-gradient(180deg, rgba(30,55,103,.7) 0%, rgba(30,55,103,.9) 100%), url("/huehnerkirche-vorschau/assets/img/kopf-fassade-800.webp"); background-size: auto, cover; background-position: 0 0, 70% 50%; } }
+.page-head--hof-licht { background-image: linear-gradient(180deg, rgba(18,30,58,.6) 0%, rgba(18,30,58,0) 30%), linear-gradient(90deg, rgba(30,55,103,.95) 0%, rgba(30,55,103,.85) 30%, rgba(42,74,135,.3) 56%, rgba(42,74,135,0) 76%), image-set(url("/huehnerkirche-vorschau/assets/img/kopf-hof-licht-1920.avif") type("image/avif"), url("/huehnerkirche-vorschau/assets/img/kopf-hof-licht-1920.webp") type("image/webp"), url("/huehnerkirche-vorschau/assets/img/kopf-hof-licht-1280.jpg") type("image/jpeg")); background-size: auto, auto, cover; background-position: 0 0, 0 0, 100% 50%; }
+@media (max-width: 760px) { .page-head--hof-licht { background-image: linear-gradient(180deg, rgba(30,55,103,.7) 0%, rgba(30,55,103,.9) 100%), url("/huehnerkirche-vorschau/assets/img/kopf-hof-licht-800.webp"); background-size: auto, cover; background-position: 0 0, 70% 50%; } }
+.page-head--lage { background-image: linear-gradient(180deg, rgba(18,30,58,.6) 0%, rgba(18,30,58,0) 30%), linear-gradient(90deg, rgba(30,55,103,.95) 0%, rgba(30,55,103,.85) 30%, rgba(42,74,135,.3) 56%, rgba(42,74,135,0) 76%), image-set(url("/huehnerkirche-vorschau/assets/img/kopf-lage-1920.avif") type("image/avif"), url("/huehnerkirche-vorschau/assets/img/kopf-lage-1920.webp") type("image/webp"), url("/huehnerkirche-vorschau/assets/img/kopf-lage-1280.jpg") type("image/jpeg")); background-size: auto, auto, cover; background-position: 0 0, 0 0, 100% 50%; }
+@media (max-width: 760px) { .page-head--lage { background-image: linear-gradient(180deg, rgba(30,55,103,.7) 0%, rgba(30,55,103,.9) 100%), url("/huehnerkirche-vorschau/assets/img/kopf-lage-800.webp"); background-size: auto, cover; background-position: 0 0, 70% 50%; } }
 .page-head h1 { font-weight: 700; font-size: clamp(2.2rem, 1.3rem + 2.6vw, 3.6rem); letter-spacing: -0.01em; margin-bottom: 0.35em; line-height: 1.04; max-width: 18ch; }
 .page-head .lede { max-width: 44ch; margin-bottom: 0; }
 
@@ -442,7 +449,7 @@ body { padding-bottom: var(--callbar-h); }
   background-color: var(--brand-deep);
   background-image:
     linear-gradient(rgba(18,30,58,.86), rgba(18,30,58,.86)),
-    image-set(url("/huehnerkirche-vorschau/assets/img/hof-innenhof-1920.avif") type("image/avif"), url("/huehnerkirche-vorschau/assets/img/hof-innenhof-1920.webp") type("image/webp"), url("/huehnerkirche-vorschau/assets/img/hof-innenhof-1280.jpg") type("image/jpeg"));
+    image-set(url("/huehnerkirche-vorschau/assets/img/drohne-innenhof-1920.avif") type("image/avif"), url("/huehnerkirche-vorschau/assets/img/drohne-innenhof-1920.webp") type("image/webp"), url("/huehnerkirche-vorschau/assets/img/drohne-innenhof-1280.jpg") type("image/jpeg"));
   background-size: cover; background-position: center 55%;
 }
 .reserve__kicker { color: #E4C16C; font-style: italic; margin: 0 auto 0.6rem; font-size: var(--step-1); }
@@ -459,8 +466,8 @@ body { padding-bottom: var(--callbar-h); }
 .reserve__times strong { color: #fff; font-weight: 600; }
 
 /* ---------- Footer ---------- */
-.site-footer { background: var(--brand-deep); color: #D8D2C4; padding-block: clamp(3rem, 6vw, 4.5rem) 1.5rem; }
-.site-footer a { color: #E9E1CE; text-decoration: none; }
+.site-footer { background: var(--brand-deep); color: #fff; padding-block: clamp(3rem, 6vw, 4.5rem) 1.5rem; }
+.site-footer a { color: #fff; text-decoration: none; }
 .site-footer a:hover { color: #E4C16C; }
 .footer-grid { display: grid; gap: 2rem; }
 @media (min-width: 720px) { .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; } }
@@ -479,7 +486,7 @@ body { padding-bottom: var(--callbar-h); }
 .advema-signatur {
   display: inline-flex; align-items: center; gap: 0.5em;
   font-family: inherit; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
-  color: inherit; text-decoration: none; opacity: .85;
+  color: inherit; text-decoration: none;
 }
 .advema-signatur:hover { opacity: 1; color: #fff; }
 .advema-signatur img { display: block; height: 1.2em; width: auto; }
@@ -541,3 +548,15 @@ body { padding-bottom: var(--callbar-h); }
 .to-top.is-visible { opacity: 1; transform: none; pointer-events: auto; }
 .to-top:hover { background: var(--brand-deep); }
 .to-top svg { width: 22px; height: 22px; }
+
+/* ---------- Text in Buttons optisch exakt mittig ----------
+   Serifenschriften haben oben mehr Innenraum als unten. text-box schneidet auf Versalhöhe/Grundlinie zu,
+   damit Innenabstand oben und unten wirklich gleich ist (Chrome/Edge/Safari; Firefox zeigt es wie bisher). */
+.btn, .callbar__phone, .reserve__phone, .infocard__phone, .menu-filter button, .nav__group a, .infocard__link {
+  text-box: trim-both cap alphabetic;
+}
+@supports (text-box: trim-both cap alphabetic) {
+  .btn { padding-block: 1.05em; }
+  .reserve__phone { padding-block: 0.42em; }
+  .menu-filter button { padding-block: 0.85em; }
+}
