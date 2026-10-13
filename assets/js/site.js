@@ -52,6 +52,35 @@
   };
   if (statusEls.length) { renderStatus(); setInterval(renderStatus, 60000); }
 
+  /* ---------- Google-Bewertungen (vom eigenen Server, 24 h gecacht) ---------- */
+  // ponytail: ohne PHP (z. B. Vorschau auf GitHub Pages) bleibt einfach der statische Stand stehen
+  var gBox = doc.querySelector("[data-google-reviews]");
+  if (gBox && window.fetch) {
+    fetch("/api/google-bewertungen.php").then(function (r) { return r.ok ? r.json() : null; }).then(function (g) {
+      if (!g || !g.rating) return;
+      var de = function (n, d) { return n.toLocaleString("de-DE", { minimumFractionDigits: d, maximumFractionDigits: d }); };
+      Array.prototype.forEach.call(doc.querySelectorAll("[data-g-rating]"), function (el) { el.textContent = de(g.rating, 1); });
+      Array.prototype.forEach.call(doc.querySelectorAll("[data-g-count]"), function (el) { el.textContent = de(g.count, 0); });
+      if (g.mapsUrl) doc.querySelector("[data-g-link]").href = g.mapsUrl;
+      var list = doc.querySelector("[data-g-list]");
+      if (!g.reviews || !g.reviews.length) return;
+      // Live-Auszüge zuerst, mit den statischen auf drei auffüllen
+      var keep = Array.prototype.slice.call(list.children, 0, Math.max(0, 3 - g.reviews.length));
+      list.textContent = "";
+      g.reviews.forEach(function (rv) {
+        var fig = doc.createElement("figure"); fig.className = "review";
+        var q = doc.createElement("blockquote"); q.className = "review__body"; q.textContent = rv.text;
+        var cap = doc.createElement("figcaption"); cap.className = "review__author";
+        var who = doc.createElement(rv.url ? "a" : "span"); who.textContent = rv.author;
+        if (rv.url) { who.href = rv.url; who.target = "_blank"; who.rel = "noopener"; }
+        cap.appendChild(who);
+        if (rv.when) cap.appendChild(doc.createTextNode(" · " + rv.when));
+        fig.appendChild(q); fig.appendChild(cap); list.appendChild(fig);
+      });
+      keep.forEach(function (el) { list.appendChild(el); });
+    }).catch(function () {});
+  }
+
   /* ---------- Speisekarten-Filter ---------- */
   var filter = doc.querySelector(".menu-filter");
   if (filter) {

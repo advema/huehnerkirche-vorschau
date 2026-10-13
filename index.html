@@ -163,7 +163,7 @@
         <a class="btn btn--light" href="tel:+4961268321">Tisch reservieren: 06126 8321</a>
         <a class="btn btn--outline-light" href="/huehnerkirche-vorschau/speisekarte">Zur Speisekarte <span aria-hidden="true">→</span></a>
       </div>
-      <p class="hero__facts">Ruhetag ist Montag und Freitag.<br>Bei Google 4,3&nbsp;★ aus 671&nbsp;Bewertungen.</p>
+      <p class="hero__facts">Ruhetag ist Montag und Freitag.<br>Bei Google <span data-g-rating>4,3</span>&nbsp;★ aus <span data-g-count>671</span>&nbsp;Bewertungen.</p>
     </div>
   </section>
 
@@ -240,11 +240,15 @@
     </div>
   </section>
 
-  <!-- BEWERTUNGEN -->
-  <section class="bg-surface">
+  <!-- BEWERTUNGEN: Gesamtnote/Anzahl + 5-Sterne-Auszüge werden täglich serverseitig von Google geladen (api/google-bewertungen.php); unten der statische Stand als Fallback -->
+  <section class="bg-surface" data-google-reviews>
     <div class="wrap">
-      <h2>4,3&nbsp;★ bei 671&nbsp;Google-Bewertungen</h2>
-      <div class="reviews">
+      <div class="reviews__head">
+        <h2><span data-g-rating>4,3</span>&nbsp;★ bei <span data-g-count>671</span>&nbsp;Google-Bewertungen</h2>
+        <a class="reviews__all" href="https://www.google.com/maps/search/?api=1&amp;query=Gasthof+H%C3%BChnerkirche+H%C3%BCnstetten" target="_blank" rel="noopener" data-g-link>Alle Bewertungen auf Google <span aria-hidden="true">↗</span></a>
+      </div>
+      <p class="reviews__note">Auszug aus unseren 5-Sterne-Bewertungen auf Google. Die Gesamtnote oben bezieht sich auf alle Bewertungen.</p>
+      <div class="reviews" data-g-list>
         <figure class="review">
           <blockquote class="review__body">Toller Ort zum „Futtern wie bei Muttern“. Sehr authentische Küche, einfach, aber geradlinig und sehr lecker. Schnitzel mit Bratkartoffeln und Wirsing, das passte super zusammen. So echte Küche suche ich oft und finde sie selten. Klare Empfehlung, ich komme wieder.</blockquote>
           <figcaption class="review__author">Hans-Jörg M.</figcaption>
