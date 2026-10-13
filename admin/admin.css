@@ -218,6 +218,6 @@ input, textarea { font: inherit; color: var(--ink); }
 .grp.is-hidden, .bereich.is-hidden { display: none; }
 
 /* Hinweis Testversion */
-.demo-note { max-width: 1240px; margin: 16px auto 0; padding: 12px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; background: #FBF1DB; border: 1px solid #EBD7A8; border-radius: 12px; width: calc(100% - 40px); }
+.demo-note { max-width: 1200px; margin: 16px auto 0; padding: 12px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; background: #FBF1DB; border: 1px solid #EBD7A8; border-radius: 12px; width: calc(100% - 40px); }
 .demo-note p { margin: 0; flex: 1; min-width: 240px; }
 .demo-note .btn { margin-left: auto; }
