@@ -14,7 +14,8 @@
     var o = JSON.parse(v); if (k === "speisekarte" && !o.artikel) return; // alter Teststand ohne Artikelliste
     state[k] = o; saved[k] = JSON.parse(v);
   } catch (e) {} });
-  var tab = "speisekarte";
+  var tab = "start";
+  try { tab = sessionStorage.getItem("hk-tab") || "start"; } catch (e) {}
   var karteIdx = 0; // Index in karten, oder "getraenke"
   var suche = "";
 
@@ -58,7 +59,14 @@
   /* ---------- Speichern / Änderungen ---------- */
   var bar = document.querySelector(".savebar");
   function dirtyKeys() { return KEYS.filter(function (k) { return JSON.stringify(state[k]) !== JSON.stringify(saved[k]); }); }
-  function changed() { bar.hidden = dirtyKeys().length === 0; }
+  var NAMEN = { speisekarte: "Speisekarte", inhalte: "Texte", hinweis: "Hinweis" };
+  function changed() {
+    var k = dirtyKeys(); bar.hidden = k.length === 0;
+    document.querySelector(".savebar__msg").textContent = "Ungespeichert: " + k.map(function (x) { return NAMEN[x]; }).join(", ");
+  }
+  document.addEventListener("keydown", function (e) { // Strg/⌘ + S speichert
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); if (dirtyKeys().length) document.querySelector("[data-speichern]").click(); }
+  });
   document.querySelector("[data-speichern]").addEventListener("click", function () {
     var keys = dirtyKeys(), btn = this;
     btn.disabled = true; btn.textContent = "Speichert …";
@@ -80,12 +88,12 @@
   /* ---------- Navigation ---------- */
   var tabs = document.querySelectorAll("[data-tab]");
   Array.prototype.forEach.call(tabs, function (b) {
-    b.addEventListener("click", function () { tab = b.dataset.tab; render(); window.scrollTo(0, 0); });
+    b.addEventListener("click", function () { tab = b.dataset.tab; try { sessionStorage.setItem("hk-tab", tab); } catch (e) {} render(); window.scrollTo(0, 0); });
   });
   function render() {
     Array.prototype.forEach.call(tabs, function (b) { b.toggleAttribute("aria-current", b.dataset.tab === tab); if (b.dataset.tab === tab) b.setAttribute("aria-current", "page"); });
     app.textContent = "";
-    ({ speisekarte: renderSpeisekarte, texte: renderTexte, hinweis: renderHinweis, statistik: renderStatistik, verlauf: renderVerlauf })[tab]();
+    ({ start: renderStart, speisekarte: renderSpeisekarte, texte: renderTexte, hinweis: renderHinweis, statistik: renderStatistik, verlauf: renderVerlauf })[tab]();
   }
 
   /* =====================================================================
@@ -156,11 +164,14 @@
   }
   var springZiel = null;
   function springe(p) {
-    karteIdx = p.key; suche = ""; springZiel = p.path; tab = "speisekarte"; render();
+    karteIdx = p.key; suche = ""; springZiel = p.path; geheZu("speisekarte");
   }
+  function geheZu(t) { tab = t; try { sessionStorage.setItem("hk-tab", t); } catch (e) {} render(); window.scrollTo(0, 0); }
 
   function gruppeCard(spalte, gi, bereich, si, bi, key) {
     var g = spalte[gi];
+    var W = key === "getraenke" ? { ein: "Getränk", name: "Name des Getränks, z. B. Apfelsaft 2 dl", gruppe: "z. B. Biere vom Fass" }
+                                : { ein: "Gericht", name: "Name des Gerichts", gruppe: "z. B. Vom Schwein" };
     var rows = h("div", { class: "dishes" });
     g.gerichte.forEach(function (d, di) {
       var a = art(d);
@@ -169,14 +180,14 @@
       rows.appendChild(h("div", { class: "dish-row" + (treffer ? "" : " is-hidden") + (suche && treffer ? " is-hit" : "") + (d.aus ? " is-aus" : "") + (d.ref ? " is-ref" : ""), "data-path": [key, bi, si, gi, di].join("|") },
         inp(a, "nr", { class: "f-nr", placeholder: "Nr.", "aria-label": "Nummer", inputmode: "numeric" }),
         h("div", { class: "f-main" },
-          inp(a, "name", { class: "f-name", placeholder: "Name des Gerichts", "aria-label": "Name" }),
+          inp(a, "name", { class: "f-name", placeholder: W.name, "aria-label": "Name" }),
           inp(a, "zusatz", { class: "f-zusatz", placeholder: "Zusatz (optional), z. B. mit Toastbrot", "aria-label": "Zusatz" })),
         h("div", { class: "f-preis-wrap" }, preisInput(a), h("span", { "aria-hidden": "true" }, "€")),
         h("div", { class: "row-act" },
-          eyeBtn(d, "Gericht"),
+          eyeBtn(d, W.ein),
           iconBtn("Nach oben", "↑", function () { move(g.gerichte, di, -1); changed(); render(); }),
           iconBtn("Nach unten", "↓", function () { move(g.gerichte, di, 1); changed(); render(); }),
-          iconBtn(d.ref ? "Von dieser Karte nehmen (Artikel bleibt in der Artikelliste)" : "Gericht löschen", "×", function () {
+          iconBtn(d.ref ? "Von dieser Karte nehmen (Artikel bleibt in der Artikelliste)" : W.ein + " löschen", "×", function () {
             if (d.ref || !a.name || confirm("„" + a.name + "“ löschen?")) { g.gerichte.splice(di, 1); changed(); render(); }
           }, "ibtn--del")),
         (d.ref || aehnliche.length) && h("div", { class: "row-info" },
@@ -191,17 +202,17 @@
     var leer = suche && !rows.querySelector(".is-hit");
     return h("section", { class: "grp" + (leer ? " is-hidden" : "") + (g.aus ? " is-aus" : "") },
       h("div", { class: "grp__head" },
-        inp(g, "titel", { class: "f-gtitel", placeholder: "Überschrift (optional), z. B. Biere vom Fass", "aria-label": "Überschrift der Gruppe" }),
+        inp(g, "titel", { class: "f-gtitel", placeholder: "Überschrift (optional), " + W.gruppe, "aria-label": "Überschrift der Gruppe" }),
         g.aus && h("span", { class: "badge" }, "Ausgeblendet"),
         h("div", { class: "row-act" },
           eyeBtn(g, "Gruppe"),
           iconBtn("Gruppe nach oben", "↑", function () { move(spalte, gi, -1); changed(); render(); }),
           iconBtn("Gruppe nach unten", "↓", function () { move(spalte, gi, 1); changed(); render(); }),
           andere && iconBtn(si === 0 ? "In rechte Spalte verschieben" : "In linke Spalte verschieben", si === 0 ? "→" : "←", function () { andere.push(spalte.splice(gi, 1)[0]); changed(); render(); }),
-          iconBtn("Gruppe löschen", "×", function () { if (confirm("Ganze Gruppe mit " + g.gerichte.length + " Gerichten löschen?")) { spalte.splice(gi, 1); changed(); render(); } }, "ibtn--del"))),
+          iconBtn("Gruppe löschen", "×", function () { if (confirm("Ganze Gruppe mit " + g.gerichte.length + " Einträgen löschen?")) { spalte.splice(gi, 1); changed(); render(); } }, "ibtn--del"))),
       rows,
       h("div", { class: "grp__foot" },
-        h("button", { type: "button", class: "addbtn", onclick: function () { g.gerichte.push(neuesGericht()); changed(); render(); } }, "+ Gericht"),
+        h("button", { type: "button", class: "addbtn", onclick: function () { g.gerichte.push(neuesGericht()); changed(); render(); } }, "+ " + W.ein),
         artikelAuswahl(g),
         inp(g, "hinweis", { class: "f-ghinweis", placeholder: "Hinweis unter der Gruppe (optional)", "aria-label": "Hinweis unter der Gruppe" })));
   }
@@ -321,7 +332,7 @@
         "Getränke", h("span", { class: "pill-n" }, String(anzahl(sk.getraenke.bereiche)))),
       h("button", { type: "button", class: "pill--artikel", "aria-pressed": karteIdx === "artikel" ? "true" : "false", onclick: function () { karteIdx = "artikel"; render(); } },
         "Artikelliste", h("span", { class: "pill-n" }, String(artikel().length))));
-    var search = h("input", { type: "search", class: "search", placeholder: "Gericht suchen, z. B. Schnitzel", "aria-label": "Gericht suchen", value: suche,
+    var search = h("input", { type: "search", class: "search", placeholder: karteIdx === "getraenke" ? "Getränk suchen, z. B. Pils" : "Suchen, z. B. Schnitzel", "aria-label": "Suchen", value: suche,
       oninput: function () { suche = this.value.toLowerCase().trim(); var pos = this.selectionStart; render(); var s = app.querySelector(".search"); s.focus(); s.setSelectionRange(pos, pos); } });
     search.value = suche;
     var vorschau = h("div", { class: "pagehead__act" },
@@ -560,6 +571,70 @@
         h("section", { class: "card" }, h("h2", null, "Woher die Besucher kommen"), barList(d.herkunft)),
         h("section", { class: "card" }, h("h2", null, "Geräte"), barList(d.geraete))));
     }).catch(function (e) { body.textContent = ""; body.appendChild(h("p", { class: "msg msg--err" }, e.message)); });
+  }
+
+
+  /* =====================================================================
+     Übersicht (Startseite des Backends)
+     ===================================================================== */
+  function renderStart() {
+    var std = new Date().getHours();
+    var gruss = std < 11 ? "Guten Morgen" : std < 18 ? "Guten Tag" : "Guten Abend";
+    var sk = state.speisekarte, hw = state.hinweis;
+    PLAETZE = allePlaetze();
+    var sichtbar = function (bs) { var n = 0; bs.forEach(function (b) { b.spalten.forEach(function (s) { s.forEach(function (g) { if (!g.aus) g.gerichte.forEach(function (d) { if (!d.aus) n++; }); }); }); }); return n; };
+    var aus = PLAETZE.filter(function (p) { return p.d.aus; }).length;
+    var heute = new Date().toISOString().slice(0, 10);
+    var hwAktiv = hw.aktiv && hw.text && (!hw.bis || hw.bis >= heute);
+
+    app.appendChild(h("div", { class: "hello" },
+      h("h1", null, gruss + "!"),
+      h("p", { class: "muted" }, "Was möchten Sie heute erledigen?")));
+
+    var aktion = function (titel, text, fn, primary) {
+      return h("button", { type: "button", class: "quick" + (primary ? " quick--primary" : ""), onclick: fn }, h("strong", null, titel), h("span", null, text));
+    };
+    app.appendChild(h("div", { class: "quick-grid" },
+      aktion("Preise ändern", "Gericht suchen und Preis anpassen", function () { karteIdx = 0; geheZu("speisekarte"); setTimeout(function () { var s = app.querySelector(".search"); if (s) s.focus(); }, 50); }, true),
+      aktion("Hinweis setzen", "z. B. Betriebsferien oder Feiertag", function () { geheZu("hinweis"); }),
+      aktion("Karte drucken", "Abendkarte als A4 / PDF", function () { karteIdx = 0; geheZu("speisekarte"); setTimeout(drucken, 80); }),
+      aktion("Neuer Artikel", "Gericht für die Abendkarte anlegen", function () { karteIdx = "artikel"; geheZu("speisekarte"); })));
+
+    var besuche = h("div", { class: "mini-stat" }, h("p", { class: "muted" }, "Lädt …"));
+    var verlauf = h("ul", { class: "mini-list" }, h("li", { class: "muted" }, "Lädt …"));
+    app.appendChild(h("div", { class: "dash" },
+      h("section", { class: "card dash__card" }, h("div", { class: "dash__head" }, h("h2", null, "Besucher"), h("button", { type: "button", class: "link", onclick: function () { geheZu("statistik"); } }, "Statistik →")), besuche),
+      h("section", { class: "card dash__card" + (hwAktiv ? " dash__card--gold" : "") },
+        h("div", { class: "dash__head" }, h("h2", null, "Hinweis auf der Website"), h("button", { type: "button", class: "link", onclick: function () { geheZu("hinweis"); } }, "Bearbeiten →")),
+        hwAktiv ? h("p", { class: "dash__big" }, "„" + hw.text + "“") : h("p", { class: "muted" }, "Zurzeit wird kein Hinweis angezeigt."),
+        hwAktiv && hw.bis && h("p", { class: "muted small" }, "Wird bis " + new Date(hw.bis + "T12:00:00").toLocaleDateString("de-DE") + " angezeigt.")),
+      h("section", { class: "card dash__card" },
+        h("div", { class: "dash__head" }, h("h2", null, "Speisekarten"), h("button", { type: "button", class: "link", onclick: function () { geheZu("speisekarte"); } }, "Öffnen →")),
+        h("ul", { class: "mini-list" },
+          sk.karten.map(function (k, i) { return h("li", null, h("button", { type: "button", class: "link", onclick: function () { karteIdx = i; geheZu("speisekarte"); } }, k.titel), h("span", null, sichtbar(k.bereiche) + " Gerichte")); }),
+          h("li", null, h("button", { type: "button", class: "link", onclick: function () { karteIdx = "getraenke"; geheZu("speisekarte"); } }, "Getränke"), h("span", null, sichtbar(sk.getraenke.bereiche) + " Getränke")),
+          h("li", null, h("button", { type: "button", class: "link", onclick: function () { karteIdx = "artikel"; geheZu("speisekarte"); } }, "Artikelliste"), h("span", null, artikel().length + " Artikel"))),
+        aus > 0 && h("p", { class: "muted small" }, aus + " Einträge sind zurzeit ausgeblendet.")),
+      h("section", { class: "card dash__card" }, h("div", { class: "dash__head" }, h("h2", null, "Letzte Änderungen"), h("button", { type: "button", class: "link", onclick: function () { geheZu("verlauf"); } }, "Verlauf →")), verlauf)));
+
+    api({ aktion: "statistik", tage: 7 }).then(function (d) {
+      besuche.textContent = "";
+      var heuteT = d.tage[d.tage.length - 1], max = Math.max.apply(null, d.tage.map(function (t) { return t.besucher; }).concat([1]));
+      besuche.appendChild(h("div", { class: "mini-stat__nums" },
+        h("div", null, h("span", { class: "kpi__val" }, String(heuteT.besucher)), h("span", { class: "muted small" }, "heute")),
+        h("div", null, h("span", { class: "kpi__val" }, d.summe.besucher.toLocaleString("de-DE")), h("span", { class: "muted small" }, "letzte 7 Tage"))));
+      besuche.appendChild(h("div", { class: "spark", role: "img", "aria-label": "Besuche der letzten 7 Tage" }, d.tage.map(function (t) {
+        var b = h("span", { title: fmtTag(t.tag) + ": " + t.besucher + " Besuche" }); b.style.height = Math.max(4, t.besucher / max * 100) + "%"; return b;
+      })));
+    }).catch(function () { besuche.textContent = "Statistik nicht verfügbar."; });
+    api({ aktion: "verlauf" }).then(function (d) {
+      verlauf.textContent = "";
+      if (!d.eintraege.length) { verlauf.appendChild(h("li", { class: "muted" }, "Noch keine Änderungen gespeichert.")); return; }
+      d.eintraege.slice(0, 4).forEach(function (v) {
+        var dt = new Date(v.zeit.replace(" ", "T"));
+        verlauf.appendChild(h("li", null, h("span", null, ART[v.art] + (v.von ? " · " + v.von : "")), h("span", { class: "muted" }, dt.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" }) + ", " + dt.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }))));
+      });
+    }).catch(function () { verlauf.textContent = ""; });
   }
 
   /* =====================================================================
