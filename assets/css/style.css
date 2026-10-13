@@ -55,7 +55,7 @@
   --wrap: 72rem;
   --gutter: clamp(1.1rem, 4vw, 3rem);
   --radius: 3px;
-  --header-h: 64px;
+  --header-h: 72px;
   --callbar-h: 4.25rem;
 }
 
@@ -121,7 +121,7 @@ section { padding-block: clamp(3.5rem, 8vw, 7rem); }
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.6rem; }
 
 /* ---------- Header: liegt transparent über Foto-Köpfen, beim Scrollen dunkelblau ---------- */
-@media (min-width: 900px) { :root { --header-h: 96px; } }
+@media (min-width: 900px) { :root { --header-h: 120px; } }
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 40;
   background: var(--brand-deep); transition: background-color .3s ease, box-shadow .3s ease;
@@ -131,9 +131,9 @@ body:has(.hero, .page-head) .site-header:not(.is-scrolled):not(:has([data-open="
 body:not(:has(.hero, .page-head)) main { padding-top: var(--header-h); }
 #main { scroll-margin-top: var(--header-h); }
 
-.nav { position: relative; display: flex; align-items: center; justify-content: center; min-height: var(--header-h); }
+.nav { position: relative; display: flex; align-items: center; justify-content: center; min-height: var(--header-h); transition: min-height .3s ease; }
 .brand-badge { display: block; text-decoration: none; }
-.brand-badge img { height: 46px; width: auto; display: block; }
+.brand-badge img { height: 56px; width: auto; display: block; transition: height .3s ease; }
 .brand-spacer { display: none; }
 
 .nav__group { display: flex; align-items: center; gap: 0.2rem; }
@@ -180,7 +180,10 @@ body:not(:has(.hero, .page-head)) main { padding-top: var(--header-h); }
   .nav__group--left  { grid-area: left;  justify-self: end;   padding-right: 2.6rem; }
   .nav__group--right { grid-area: right; justify-self: start; padding-left: 2.6rem; }
   .brand-badge { grid-area: badge; }
-  .brand-badge img { height: 72px; }
+  .brand-badge img { height: 104px; }
+  /* beim Scrollen kompakter */
+  .site-header.is-scrolled .nav { min-height: 84px; }
+  .site-header.is-scrolled .brand-badge img { height: 68px; }
 }
 
 /* ---------- Hero: Luftbild über die volle Breite, Verlauf in Markenblau ---------- */
