@@ -56,7 +56,7 @@
   --gutter: clamp(1.1rem, 4vw, 3rem);
   --radius: 3px;
   --header-h: 64px;
-  --callbar-h: 4.4rem;
+  --callbar-h: 4.25rem;
 }
 
 /* ---------- Reset-ish ---------- */
@@ -232,16 +232,16 @@ body { padding-bottom: var(--callbar-h); }
   box-shadow: 0 -10px 30px -18px rgba(0,0,0,.5);
 }
 .callbar__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-.callbar .open-status { margin: 0; color: #F4EFE4; font-size: var(--step--1); line-height: 1.3; }
-.callbar__note { color: #C8CEBD; font-size: var(--step--1); margin-left: auto; }
+.callbar .open-status { margin: 0; color: #fff; font-size: var(--step-0); line-height: 1.3; }
+.callbar__note { color: #D8DCE6; font-size: var(--step-0); margin-left: auto; }
 .callbar__phone {
-  display: inline-flex; align-items: center; gap: 0.55em; flex: none; min-height: 44px;
-  padding: 0.5em 1.5em; border-radius: 999px; background: #C9A25A; color: var(--ink);
+  display: inline-flex; align-items: center; gap: 0.55em; flex: none; height: 2.6rem; line-height: 1;
+  padding: 0 1.4em; border-radius: 999px; background: #C9A25A; color: var(--ink);
   font-weight: 600; text-decoration: none; font-variant-numeric: lining-nums tabular-nums;
 }
 .callbar__phone:hover { background: #E4C16C; color: var(--ink); }
 .callbar__phone svg { width: 1.05em; height: 1.05em; }
-@media (max-width: 640px) { .callbar__note { display: none; } }
+@media (max-width: 640px) { .callbar__note { display: none; } .callbar .open-status { font-size: 0.92rem; } .callbar__phone { padding: 0 1.1em; } }
 
 /* ---------- Sektionen / Editorial ---------- */
 .bg-surface { background: var(--surface); }
