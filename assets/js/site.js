@@ -10,9 +10,9 @@
 
   /* ---------- Live-Öffnungsstatus ---------- */
   // Öffnungstage (0 = So) und Startzeiten. Ende wird nicht angezeigt, intern aber gebraucht:
-  // ponytail: Ende Mittag 14:30 / Abend 22:00 angenommen, hier anpassen, falls Küche anders schließt
+  // Mittagstisch 12–14 Uhr (vom Kunden bestätigt); abends ab 17 Uhr, Ende intern mit 22:00 angenommen
   var OPEN_DAYS = [0, 2, 3, 4, 6];
-  var SLOTS = [[12 * 60, 14 * 60 + 30], [17 * 60, 22 * 60]];
+  var SLOTS = [[12 * 60, 14 * 60], [17 * 60, 22 * 60]];
   var DAYNAMES = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
   var hhmm = function (m) { return Math.floor(m / 60) + ":" + ("0" + (m % 60)).slice(-2) + " Uhr"; };
   var berlinNow = function () {
@@ -72,6 +72,14 @@
     var pick = t.min < SLOTS[1][0] ? (t.day === 0 ? "karte-mittag-sonntags" : "karte-mittag-werktags") : "karte-abend";
     show(doc.querySelector("#" + pick + " .dish") ? pick : "karte-abend"); // leere Karte nicht vorwählen
     filter.hidden = false;
+  }
+
+  /* ---------- Header: transparent über dem Foto, dunkel sobald gescrollt ---------- */
+  var header = doc.querySelector(".site-header");
+  if (header) {
+    var onHeaderScroll = function () { header.classList.toggle("is-scrolled", window.scrollY > 40); };
+    window.addEventListener("scroll", onHeaderScroll, { passive: true });
+    onHeaderScroll();
   }
 
   /* ---------- Mobile-Navigation ---------- */

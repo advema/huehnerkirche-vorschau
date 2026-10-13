@@ -6,3 +6,6 @@
   position: static; transform: none; box-shadow: none; inset: auto;
   flex-basis: 100%; padding: 0.25rem 0 0.6rem; border-bottom: none;
 }
+
+/* ohne JS kein Scroll-Wechsel: Header immer dunkel */
+.site-header { background: var(--brand-deep) !important; }

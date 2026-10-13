@@ -29,8 +29,8 @@
 <link rel="manifest" href="/huehnerkirche-vorschau/site.webmanifest">
 
 <!-- Font-Preload (kritisch, above the fold) -->
-<link rel="preload" href="/huehnerkirche-vorschau/assets/fonts/vollkorn-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/huehnerkirche-vorschau/assets/fonts/vollkorn-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/huehnerkirche-vorschau/assets/fonts/domine-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/huehnerkirche-vorschau/assets/fonts/source-serif-4-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <!-- Hero-Bild vorladen (LCP) -->
 <link rel="preload" as="image" href="/huehnerkirche-vorschau/assets/img/hof-weit-1280.avif" type="image/avif" fetchpriority="high"
       imagesrcset="/huehnerkirche-vorschau/assets/img/hof-weit-800.avif 800w, /huehnerkirche-vorschau/assets/img/hof-weit-1280.avif 1280w, /huehnerkirche-vorschau/assets/img/hof-weit-1920.avif 1920w" imagesizes="(min-width: 900px) 56vw, 100vw">
@@ -102,7 +102,7 @@
         "result": { "@type": "Reservation", "name": "Tischreservierung" }
       },
       "openingHoursSpecification": [
-        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday","Wednesday","Thursday","Saturday","Sunday"], "opens": "12:00" },
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday","Wednesday","Thursday","Saturday","Sunday"], "opens": "12:00", "closes": "14:00" },
         { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday","Wednesday","Thursday","Saturday","Sunday"], "opens": "17:00" }
       ],
       "aggregateRating": {
@@ -130,7 +130,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     </button>
     <a class="brand-badge" href="/huehnerkirche-vorschau/" aria-label="Gasthof Hühnerkirche – Startseite">
-      <img src="/huehnerkirche-vorschau/assets/img/logo-dark-900.png" alt="" width="112" height="97" decoding="async">
+      <img src="/huehnerkirche-vorschau/assets/img/logo-light-480.png" alt="" width="480" height="417" decoding="async">
     </a>
     <span class="brand-spacer" aria-hidden="true"></span>
     <div class="nav__menu" id="nav-menu">
@@ -161,7 +161,7 @@
       <p class="lede">Gutbürgerliche Küche im denkmalgeschützten Vierseithof der Familie Alberti. Im Sommer sitzt man draußen im Hof.</p>
       <div class="btn-row">
         <a class="btn btn--light" href="tel:+4961268321">Tisch reservieren: 06126 8321</a>
-        <a class="hero__link" href="/huehnerkirche-vorschau/speisekarte">Zur Speisekarte <span aria-hidden="true">→</span></a>
+        <a class="btn btn--outline-light" href="/huehnerkirche-vorschau/speisekarte">Zur Speisekarte <span aria-hidden="true">→</span></a>
       </div>
       <p class="hero__facts">Ruhetag ist Montag und Freitag.<br>Bei Google 4,3&nbsp;★ aus 653&nbsp;Bewertungen.</p>
     </div>
@@ -220,7 +220,7 @@
     <div class="wrap split split--hours">
       <div>
       <h2>Öffnungszeiten</h2>
-      <p>Warme Küche gibt es mittags und abends. Montag und Freitag ist Ruhetag. Wenn Sie mit einer größeren Gruppe kommen oder feiern möchten, rufen Sie bitte vorher an.</p>
+      <p>Mittagstisch gibt es von 12 bis 14 Uhr, abends kochen wir ab 17 Uhr. Montag und Freitag ist Ruhetag. Wenn Sie mit einer größeren Gruppe kommen oder feiern möchten, rufen Sie bitte vorher an.</p>
       <p class="open-status" data-open-status hidden></p>
       <div class="btn-row">
         <a class="btn btn--gold" href="tel:+4961268321">Jetzt anrufen</a>
@@ -229,12 +229,12 @@
       <table class="hours">
         <tbody>
           <tr data-closed data-days="1"><th scope="row">Montag</th><td>Ruhetag</td></tr>
-          <tr data-days="2"><th scope="row">Dienstag</th><td>ab 12:00 · ab 17:00 Uhr</td></tr>
-          <tr data-days="3"><th scope="row">Mittwoch</th><td>ab 12:00 · ab 17:00 Uhr</td></tr>
-          <tr data-days="4"><th scope="row">Donnerstag</th><td>ab 12:00 · ab 17:00 Uhr</td></tr>
+          <tr data-days="2"><th scope="row">Dienstag</th><td>12:00–14:00 · ab 17:00 Uhr</td></tr>
+          <tr data-days="3"><th scope="row">Mittwoch</th><td>12:00–14:00 · ab 17:00 Uhr</td></tr>
+          <tr data-days="4"><th scope="row">Donnerstag</th><td>12:00–14:00 · ab 17:00 Uhr</td></tr>
           <tr data-closed data-days="5"><th scope="row">Freitag</th><td>Ruhetag</td></tr>
-          <tr data-days="6"><th scope="row">Samstag</th><td>ab 12:00 · ab 17:00 Uhr</td></tr>
-          <tr data-days="0"><th scope="row">Sonntag</th><td>ab 12:00 · ab 17:00 Uhr</td></tr>
+          <tr data-days="6"><th scope="row">Samstag</th><td>12:00–14:00 · ab 17:00 Uhr</td></tr>
+          <tr data-days="0"><th scope="row">Sonntag</th><td>12:00–14:00 · ab 17:00 Uhr</td></tr>
         </tbody>
       </table>
     </div>
@@ -262,13 +262,16 @@
   </section>
 
   <!-- CTA -->
-  <section class="cta-band">
-    <div class="wrap cta-band__inner">
-      <div>
-        <h2>Tisch reservieren</h2>
-        <p>Am einfachsten telefonisch, auch für größere Runden.</p>
-      </div>
-      <a class="cta-phone" href="tel:+4961268321">06126&nbsp;8321</a>
+  <section class="reserve">
+    <div class="wrap">
+      <p class="reserve__kicker">Reservierung nur telefonisch</p>
+      <h2>Rufen Sie an, wir halten Ihnen einen Tisch frei.</h2>
+      <a class="reserve__phone" href="tel:+4961268321"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg>06126&nbsp;8321</a>
+      <ul class="reserve__times">
+        <li><strong>Mittagstisch</strong> 12–14 Uhr</li>
+        <li><strong>Abends</strong> ab 17 Uhr</li>
+        <li><strong>Ruhetag</strong> Montag und Freitag</li>
+      </ul>
     </div>
   </section>
 
