@@ -139,7 +139,7 @@ input, textarea { font: inherit; color: var(--ink); }
 .seg button { border: 0; background: transparent; padding: 5px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; }
 .seg button[aria-pressed="true"] { background: #fff; color: var(--brand); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
 .cols { display: grid; gap: 16px; }
-@media (min-width: 1000px) { .cols--2 { grid-template-columns: 1fr 1fr; } }
+
 .col__label { margin: 0 0 6px; font-size: 12px; color: var(--muted); font-weight: 600; }
 .grp { border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-bottom: 10px; background: #FBFBF9; }
 .grp__head { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
@@ -384,3 +384,50 @@ input, textarea { font: inherit; color: var(--ink); }
   .dish-row .row-info { grid-area: info; }
   .f-gtitel { font-size: 14px; }
 }
+
+/* ---------- Touch-Geräte (iPad): größer, deutlicher, kein ungewolltes Zoomen ---------- */
+.login-check { display: flex !important; grid-template-columns: none; align-items: center; gap: 10px !important; font-weight: 400 !important; font-size: 15px !important; cursor: pointer; }
+.login-check input { width: 20px; height: 20px; accent-color: var(--brand); }
+.login-box input { font-size: 16px; }
+@media (pointer: coarse) {
+  body { font-size: 16.5px; }
+  input, textarea, select { font-size: 17px !important; }   /* < 16 px lässt iPad/iPhone beim Antippen hineinzoomen */
+  .ibtn { width: 44px; height: 44px; font-size: 20px; border-radius: 10px; }
+  .ibtn svg { width: 22px; height: 22px; }
+  .btn { min-height: 48px; font-size: 16px; }
+  .btn--sm { min-height: 44px; }
+  .addbtn { padding: 0.75em 1.2em; font-size: 16px; }
+  .pills button { min-height: 48px; padding: 0 18px; font-size: 16px; }
+  .seg button { padding: 9px 16px; font-size: 15px; }
+  .dish-row { padding: 6px; gap: 6px; margin-bottom: 8px; }
+  .dish-row input { padding: 9px 10px; }
+  .f-name { font-size: 17px !important; }
+  .f-preis { font-size: 18px !important; }
+  .f-zusatz { font-size: 15px !important; }
+  .chk input { width: 24px; height: 24px; }
+  .switch input { width: 52px; height: 30px; } .switch input::after { width: 24px; height: 24px; } .switch input:checked::after { transform: translateX(22px); }
+  .picker__list button { padding: 12px 10px; font-size: 17px; }
+  .match__chip { padding: 8px 14px; font-size: 14px; }
+  .savebar { padding: 12px 12px 12px 22px; } .savebar .btn { min-height: 50px; padding: 0 1.5em; }
+  .tabs button { font-size: 16px; padding: 14px 16px; }
+  .quick { padding: 22px; } .quick strong { font-size: 19px; } .quick span { font-size: 15px; }
+  .muted { font-size: 15px; }
+}
+/* iPad hochkant (Tab-Leiste unten): Beschriftung lesbar groß */
+@media (pointer: coarse) and (max-width: 860px) { .tabs button { font-size: 12.5px; padding: 8px 2px; } .tabs button svg { width: 24px; height: 24px; } body.app { padding-bottom: 84px; } }
+/* Spalten dürfen nie breiter als der Platz werden (sonst zoomt das iPad heraus) */
+.cols--2 { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1000px) and (pointer: fine) { .cols--2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+@media (min-width: 1400px) and (pointer: coarse) { .cols--2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.f-ghinweis { min-width: 0; }
+.grp__head .f-gtitel { min-width: 0; }
+body.app { overflow-x: hidden; }
+@media (min-width: 861px) { .side { height: 100dvh; } }
+/* Touch: keine „hängenden“ Hover-Farben, kein grauer Tipp-Blitz */
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+@media (hover: none) {
+  .tabs button:hover { background: transparent; color: rgba(255,255,255,.78); }
+  .tabs button[aria-current], .tabs button[aria-current]:hover { background: #fff; color: var(--brand-deep); }
+  .quick:hover { transform: none; box-shadow: none; }
+}
+@media (max-width: 860px) { .tabs button[aria-current] { background: rgba(255,255,255,.14) !important; color: #fff !important; } .tabs button[aria-current] svg { color: var(--gold-light); } }

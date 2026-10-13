@@ -14,6 +14,12 @@
     var o = JSON.parse(v); if (k === "speisekarte" && !o.artikel) return; // alter Teststand ohne Artikelliste
     state[k] = o; saved[k] = JSON.parse(v);
   } catch (e) {} });
+  // Nach erneuter Anmeldung: gesicherten Entwurf zurückholen
+  if (!DEMO) { try {
+    var entwurf = JSON.parse(localStorage.getItem("hk-entwurf") || "null");
+    localStorage.removeItem("hk-entwurf");
+    if (entwurf) KEYS.forEach(function (k) { if (entwurf[k]) state[k] = entwurf[k]; });
+  } catch (e) {} }
   var tab = "start";
   try { tab = sessionStorage.getItem("hk-tab") || "start"; } catch (e) {}
   var karteIdx = 0; // Index in karten, oder "getraenke"
@@ -44,7 +50,14 @@
     return fetch("api.php", { method: "POST", headers: { "Content-Type": "application/json", "X-CSRF": S.csrf }, body: JSON.stringify(data), credentials: "same-origin" })
       .then(function (r) {
         return r.json().catch(function () { return { fehler: "Unerwartete Antwort vom Server (" + r.status + ")." }; })
-          .then(function (j) { if (!r.ok || j.fehler) throw new Error(j.fehler || "Fehler " + r.status); return j; });
+          .then(function (j) {
+            if (r.status === 401) { // abgemeldet: Änderungen sichern, neu anmelden, danach wiederherstellen
+              try { localStorage.setItem("hk-entwurf", JSON.stringify(state)); } catch (e) {}
+              alert("Sie wurden abgemeldet. Ihre Änderungen sind gesichert. Bitte melden Sie sich erneut an und tippen Sie danach auf „Speichern“.");
+              location.reload();
+            }
+            if (!r.ok || j.fehler) throw new Error(j.fehler || "Fehler " + r.status); return j;
+          });
       });
   }
   var toastEl = document.querySelector(".toast"), toastT;
@@ -453,7 +466,16 @@
     ["Startseite – Öffnungszeiten", [
       ["oeffnungszeiten_text", "Text neben der Tabelle", 500]]],
     ["Speisekarte", [
-      ["speisekarte_text", "Text im Kopfbereich", 300]]]
+      ["speisekarte_text", "Text im Kopfbereich", 300]]],
+    ["Über uns – Kopfbereich", [
+      ["uu_titel", "Überschrift", 80],
+      ["uu_lede", "Text unter der Überschrift", 260]]],
+    ["Über uns – Geschichte", [
+      ["uu_t1", "1. Überschrift", 80], ["uu_a1", "1. Text", 1500],
+      ["uu_bild", "Bildunterschrift", 140],
+      ["uu_t2", "2. Überschrift", 80], ["uu_a2", "2. Text", 1500],
+      ["uu_t3", "3. Überschrift", 80], ["uu_a3", "3. Text, erster Absatz", 1500], ["uu_a3b", "3. Text, zweiter Absatz", 1500],
+      ["uu_t4", "4. Überschrift", 80], ["uu_a4", "4. Text, erster Absatz", 1500], ["uu_a4b", "4. Text, zweiter Absatz", 1500]]]
   ];
   function renderTexte() {
     app.appendChild(h("div", { class: "pagehead" }, h("div", null, h("h1", null, "Texte"), h("p", { class: "muted" }, "Kleine Textänderungen auf der Website. Zeilenumbrüche werden zu Leerzeichen."))));
@@ -462,7 +484,7 @@
         grp[1].map(function (f) {
           var count = h("span", { class: "count" });
           var upd = function (el) { count.textContent = el.value.length + " / " + f[2]; count.classList.toggle("is-over", el.value.length > f[2]); };
-          var el = inp(state.inhalte, f[0], { maxlength: f[2], multiline: f[2] > 120, rows: f[2] > 300 ? 4 : 2,
+          var el = inp(state.inhalte, f[0], { maxlength: f[2], multiline: f[2] > 120, rows: f[2] > 1000 ? 6 : f[2] > 300 ? 4 : 2,
             oninput: function () { state.inhalte[f[0]] = this.value; upd(this); changed(); } });
           upd(el);
           return h("label", { class: "fld" }, h("span", null, f[1], count), el);
@@ -720,4 +742,5 @@
   }
 
   render();
+  changed(); // falls ein Entwurf wiederhergestellt wurde, Speichern-Leiste zeigen
 })();
