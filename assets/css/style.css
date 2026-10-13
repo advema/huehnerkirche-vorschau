@@ -511,7 +511,7 @@ body { padding-bottom: var(--callbar-h); }
 .reviews__head h2 { margin-bottom: 0.3em; }
 .reviews__all { font-weight: 600; color: var(--brand); text-decoration: none; border-bottom: 2px solid var(--brass); }
 .reviews__all:hover { color: var(--brass-text); }
-.reviews__note { font-size: var(--step--1); color: var(--slate); margin: 0; }
+.reviews__note { font-size: var(--step--1); color: var(--slate); margin: 0; max-width: none; }
 .review__author a { color: inherit; text-decoration: none; }
 .review__author a:hover { color: var(--brand); }
 .reviews { display: grid; gap: 2rem 2.5rem; margin-top: 2rem; }
@@ -565,3 +565,18 @@ body { padding-bottom: var(--callbar-h); }
   .reserve__phone { padding-block: 0.7em; }
   .menu-filter button { padding-block: 0.85em; }
 }
+
+/* ---------- Hinweis aus dem Backend (z. B. Betriebsferien), über der Telefon-Leiste ---------- */
+.notice {
+  position: fixed; left: 0; right: 0; bottom: var(--callbar-h); z-index: 44;
+  display: flex; align-items: center; justify-content: center; gap: 1rem;
+  padding: 0.7rem 3.5rem 0.7rem var(--gutter); background: #E4C16C; color: var(--ink); text-align: center;
+  font-weight: 600; box-shadow: 0 -8px 24px -16px rgba(0,0,0,.5);
+}
+.notice p { margin: 0; max-width: none; }
+.notice__close {
+  position: absolute; right: 0.6rem; top: 50%; transform: translateY(-50%);
+  width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: var(--ink);
+  font-size: 1.6rem; line-height: 1; cursor: pointer;
+}
+.notice__close:hover { background: rgba(0,0,0,.08); }

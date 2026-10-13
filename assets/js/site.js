@@ -39,8 +39,19 @@
     }
   };
   var statusEls = doc.querySelectorAll("[data-open-status]");
+  // Betriebsferien/Hinweis aus dem Backend (api/hinweis.json)
+  var berlinDate = function (d) { return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" }).format(d || new Date()); };
+  var deDate = function (iso) { var p = iso.split("-"); return p[2] + "." + p[1] + "."; };
+  var hinweis = null;
+  var ferien = function () {
+    if (!hinweis || !hinweis.aktiv || !hinweis.geschlossen || !hinweis.von || !hinweis.bis) return null;
+    var heute = berlinDate();
+    if (heute < hinweis.von || heute > hinweis.bis) return null;
+    var nach = new Date(hinweis.bis + "T12:00:00"); nach.setDate(nach.getDate() + 1);
+    return { open: false, text: "Betriebsferien · wieder ab " + deDate(berlinDate(nach)) };
+  };
   var renderStatus = function () {
-    var now = berlinNow(), s = openStatus(now);
+    var now = berlinNow(), s = ferien() || openStatus(now);
     Array.prototype.forEach.call(statusEls, function (el) {
       el.textContent = s.text;
       el.dataset.state = s.open ? "open" : "closed";
@@ -51,6 +62,30 @@
     });
   };
   if (statusEls.length) { renderStatus(); setInterval(renderStatus, 60000); }
+
+  if (window.fetch) {
+    fetch("/api/hinweis.json", { cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (h) {
+      if (!h || !h.aktiv || !h.text) return;
+      var heute = berlinDate();
+      if (h.bis && heute > h.bis) return; // Hinweis erscheint ab Aktivierung, verschwindet nach „bis“ automatisch
+      hinweis = h;
+      if (statusEls.length) renderStatus();
+      try { if (sessionStorage.getItem("hk-hinweis") === h.text) return; } catch (e) {}
+      var bar = doc.createElement("div");
+      bar.className = "notice"; bar.setAttribute("role", "status");
+      var t = doc.createElement("p"); t.textContent = h.text;
+      var x = doc.createElement("button"); x.type = "button"; x.className = "notice__close"; x.setAttribute("aria-label", "Hinweis schließen"); x.textContent = "×";
+      x.addEventListener("click", function () { bar.remove(); try { sessionStorage.setItem("hk-hinweis", h.text); } catch (e) {} });
+      bar.appendChild(t); bar.appendChild(x); doc.body.appendChild(bar);
+    }).catch(function () {});
+
+    /* ---------- Besucherstatistik: cookielos, eigener Server ---------- */
+    var noTrack = false;
+    try { noTrack = localStorage.getItem("hk-nicht-zaehlen") === "1"; } catch (e) {}
+    if (!noTrack && navigator.sendBeacon && location.hostname.indexOf("huehnerkirche.de") > -1) {
+      navigator.sendBeacon("/api/besuch.php", JSON.stringify({ p: location.pathname, r: doc.referrer }));
+    }
+  }
 
   /* ---------- Google-Bewertungen (vom eigenen Server, 24 h gecacht) ---------- */
   // ponytail: ohne PHP (z. B. Vorschau auf GitHub Pages) bleibt einfach der statische Stand stehen
