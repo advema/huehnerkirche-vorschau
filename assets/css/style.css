@@ -388,10 +388,42 @@ body { padding-bottom: var(--callbar-h); }
 /* ---------- Kontakt / Info-Karten ---------- */
 .infocards { display: grid; gap: 1.5rem; }
 @media (min-width: 720px) { .infocards { grid-template-columns: repeat(2, 1fr); } }
-.infocard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.8rem; }
-.infocard h2 { color: var(--brand); font-size: var(--step-1); margin-bottom: 0.4em; }
-.infocard a { font-weight: 600; }
+.infocard {
+  position: relative; background: var(--parchment); border: 1px solid var(--line); border-top: 3px solid var(--brass);
+  border-radius: 6px; padding: 2rem 2rem 2.2rem; box-shadow: 0 24px 50px -38px rgba(30,26,20,.5);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.infocard:hover { transform: translateY(-3px); box-shadow: 0 30px 60px -36px rgba(30,26,20,.55); }
+.infocard__icon {
+  display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; margin-bottom: 1.1rem;
+  background: color-mix(in srgb, var(--brand) 9%, transparent); color: var(--brand);
+}
+.infocard__icon svg { width: 1.45rem; height: 1.45rem; }
+.infocard h2 { color: var(--brand); font-size: var(--step-2); margin-bottom: 0.55em; }
+.infocard p { max-width: none; }
+.infocard__lead { font-size: var(--step-1); line-height: 1.45; color: var(--ink); }
+.infocard__link {
+  display: inline-flex; align-items: center; gap: 0.4em; font-weight: 600; color: var(--brand); text-decoration: none;
+  border-bottom: 2px solid var(--brass); padding-bottom: 0.15em;
+}
+.infocard__link:hover { color: var(--brass-text); }
+/* Reservierung hervorgehoben */
+.infocard--dark { background: var(--brand-deep); border-color: var(--brand-deep); border-top-color: #E4C16C; color: rgba(255,255,255,.88); }
+.infocard--dark h2 { color: #fff; }
+.infocard--dark .infocard__icon { background: rgba(228,193,108,.16); color: #E4C16C; }
+.infocard__phone {
+  display: inline-block; margin-top: 0.4rem; color: #E4C16C; text-decoration: none;
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 1.4rem + 2vw, 2.8rem); line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.infocard__phone:hover { color: #fff; }
 .infocard .hours { max-width: none; }
+.infocard .open-status { margin-top: 0; }
+/* Parken mit Foto */
+.infocard--photo { padding: 0; overflow: hidden; }
+.infocard__img { width: 100%; aspect-ratio: 16 / 7; object-fit: cover; }
+.infocard__body { position: relative; padding: 0 2rem 2.2rem; }
+.infocard--photo .infocard__icon { margin-top: -1.5rem; background: var(--parchment); box-shadow: 0 6px 16px -8px rgba(0,0,0,.35); }
 .map-embed { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); margin-top: 2.5rem; }
 .map-embed img { width: 100%; }
 .map-caption {

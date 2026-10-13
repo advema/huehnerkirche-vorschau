@@ -78,16 +78,19 @@
     <div class="wrap">
       <div class="infocards">
         <div class="infocard">
+          <span class="infocard__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
           <h2>Adresse</h2>
-          <p>Gasthof Hühnerkirche<br>Hühnerkirche 1<br>65510 Hünstetten</p>
-          <p><a class="btn btn--ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=Gasthof+H%C3%BChnerkirche+H%C3%BChnerkirche+1+65510+H%C3%BCnstetten" target="_blank" rel="noopener">Route planen ↗</a></p>
+          <p class="infocard__lead">Gasthof Hühnerkirche<br>Hühnerkirche 1<br>65510 Hünstetten</p>
+          <a class="infocard__link" href="https://www.google.com/maps/dir/?api=1&amp;destination=Gasthof+H%C3%BChnerkirche+H%C3%BChnerkirche+1+65510+H%C3%BCnstetten" target="_blank" rel="noopener">Route planen <span aria-hidden="true">↗</span></a>
         </div>
-        <div class="infocard">
+        <div class="infocard infocard--dark">
+          <span class="infocard__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg></span>
           <h2>Reservierung</h2>
           <p>Reservierungen nehmen wir nur telefonisch an. Gerade für größere Runden und am Wochenende lohnt sich ein kurzer Anruf.</p>
-          <p class="infocard__phone"><a href="tel:+4961268321">06126 8321</a></p>
+          <a class="infocard__phone" href="tel:+4961268321">06126&nbsp;8321</a>
         </div>
         <div class="infocard">
+          <span class="infocard__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
           <h2>Öffnungszeiten</h2>
           <p class="open-status" data-open-status hidden></p>
           <table class="hours">
@@ -99,9 +102,13 @@
             </tbody>
           </table>
         </div>
-        <div class="infocard">
-          <h2>Parken &amp; Anreise</h2>
-          <p>Kostenlose Parkplätze direkt am Gasthof. Über die B417 aus Richtung Wiesbaden/Limburg gut erreichbar; die Autobahn A3 (Anschluss Bad Camberg) ist nur wenige Minuten entfernt.</p>
+        <div class="infocard infocard--photo">
+          <img class="infocard__img" src="/huehnerkirche-vorschau/assets/img/hof-innenhof-800.webp" alt="Der Innenhof mit Parkplätzen direkt am Gasthof" width="800" height="450" loading="lazy">
+          <div class="infocard__body">
+            <span class="infocard__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3 16h18v3H3z"/><circle cx="7.5" cy="13" r=".8"/><circle cx="16.5" cy="13" r=".8"/></svg></span>
+            <h2>Parken &amp; Anreise</h2>
+            <p>Kostenlose Parkplätze direkt am Gasthof. Über die B417 aus Richtung Wiesbaden/Limburg gut erreichbar; die Autobahn A3 (Anschluss Bad Camberg) ist nur wenige Minuten entfernt.</p>
+          </div>
         </div>
       </div>
 
