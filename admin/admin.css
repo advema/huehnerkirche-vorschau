@@ -221,3 +221,43 @@ input, textarea { font: inherit; color: var(--ink); }
 .demo-note { max-width: 1200px; margin: 16px auto 0; padding: 12px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; background: #FBF1DB; border: 1px solid #EBD7A8; border-radius: 12px; width: calc(100% - 40px); }
 .demo-note p { margin: 0; flex: 1; min-width: 240px; }
 .demo-note .btn { margin-left: auto; }
+
+/* ---------- Ein-/Ausblenden ---------- */
+.ibtn svg { width: 18px; height: 18px; }
+.ibtn--eye.is-off { color: var(--err); background: #FBECE9; }
+.dish-row.is-aus input, .grp.is-aus .dish-row input, .grp.is-aus .f-gtitel { text-decoration: line-through; color: #9AA0AB; }
+.dish-row.is-aus, .grp.is-aus .dish-row { background: repeating-linear-gradient(135deg, #fff 0 8px, #F6F5F1 8px 16px); }
+.grp.is-aus { border-style: dashed; }
+.badge { flex: none; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: #FBECE9; color: var(--err); }
+.pagehead__act { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- Druckansicht (A4) ---------- */
+#print { display: none; }
+@media print {
+  @page { size: A4; margin: 14mm 16mm 16mm; }
+  body { background: #fff; }
+  body > *:not(#print) { display: none !important; }
+  #print { display: block; font-family: var(--serif); color: #111; font-size: 10.5pt; line-height: 1.35; }
+  .p-page--break { break-before: page; }
+  .p-head { text-align: center; margin-bottom: 7mm; }
+  .p-head img { width: 34mm; height: auto; display: block; margin: 0 auto 3mm; }
+  .p-head h1 { font-family: var(--display); font-size: 20pt; margin: 0; color: #1E3767; }
+  .p-head p { margin: 1mm 0 0; font-style: italic; color: #555; }
+  .p-head::after { content: ""; display: block; width: 30mm; height: 0.6mm; background: #C9A25A; margin: 4mm auto 0; }
+  .p-cols { display: grid; gap: 0 9mm; margin-bottom: 5mm; }
+  .p-cols--2 { grid-template-columns: 1fr 1fr; }
+  .p-cols--2 .p-col + .p-col { border-left: 0.3mm solid #ddd; padding-left: 9mm; }
+  .p-grp { break-inside: avoid; margin-bottom: 4mm; }
+  .p-grp h3 { font-family: var(--display); font-size: 11.5pt; color: #1E3767; margin: 0 0 1.5mm; text-align: center; }
+  .p-dish { display: grid; grid-template-columns: 9mm 1fr auto; gap: 0 3mm; align-items: baseline; padding: 0.8mm 0; break-inside: avoid; }
+  .p-cols .p-dish:not(:has(.p-nr)) { grid-template-columns: 1fr auto; }
+  .p-nr { color: #777; font-size: 9pt; }
+  .p-name strong { font-weight: 400; }
+  .p-name { display: grid; }
+  .p-zusatz { font-style: italic; color: #555; font-size: 9.5pt; }
+  .p-course { font-style: italic; color: #777; font-size: 9pt; }
+  .p-dish--menu { padding: 1.6mm 0; border-bottom: 0.2mm solid #eee; }
+  .p-preis { white-space: nowrap; font-variant-numeric: tabular-nums lining-nums; align-self: end; }
+  .p-hinweis { font-style: italic; color: #555; font-size: 9pt; margin: 1mm 0 0; }
+  .p-foot { margin-top: 6mm; padding-top: 3mm; border-top: 0.3mm solid #C9A25A; text-align: center; font-size: 8.5pt; color: #666; }
+}

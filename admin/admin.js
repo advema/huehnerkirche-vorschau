@@ -100,6 +100,16 @@
         this.value = d.preis = v; this.classList.toggle("is-invalid", !/^\d{1,3},\d{2}$/.test(v)); changed();
       } });
   }
+  var EYE_ON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var EYE_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-3.2 4.1M6.6 6.6C3.9 8.4 2 12 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+  // Ein-/Ausblenden (z. B. Saisongerichte): bleibt gespeichert, erscheint aber nicht auf der Website
+  function eyeBtn(obj, was) {
+    var b = h("button", { type: "button", class: "ibtn ibtn--eye" + (obj.aus ? " is-off" : ""), "aria-pressed": obj.aus ? "false" : "true",
+      title: obj.aus ? was + " einblenden" : was + " ausblenden", "aria-label": obj.aus ? was + " einblenden" : was + " ausblenden",
+      onclick: function () { if (obj.aus) delete obj.aus; else obj.aus = true; changed(); render(); } });
+    b.innerHTML = obj.aus ? EYE_OFF : EYE_ON;
+    return b;
+  }
   function neuesGericht() { return { nr: "", name: "", preis: "", zusatz: "" }; }
 
   function gruppeCard(spalte, gi, bereich, si) {
@@ -107,23 +117,26 @@
     var rows = h("div", { class: "dishes" });
     g.gerichte.forEach(function (d, di) {
       var treffer = !suche || (d.name + " " + d.zusatz + " " + d.nr).toLowerCase().indexOf(suche) > -1;
-      rows.appendChild(h("div", { class: "dish-row" + (treffer ? "" : " is-hidden") + (suche && treffer ? " is-hit" : "") },
+      rows.appendChild(h("div", { class: "dish-row" + (treffer ? "" : " is-hidden") + (suche && treffer ? " is-hit" : "") + (d.aus ? " is-aus" : "") },
         inp(d, "nr", { class: "f-nr", placeholder: "Nr.", "aria-label": "Nummer", inputmode: "numeric" }),
         h("div", { class: "f-main" },
           inp(d, "name", { class: "f-name", placeholder: "Name des Gerichts", "aria-label": "Name" }),
           inp(d, "zusatz", { class: "f-zusatz", placeholder: "Zusatz (optional), z. B. mit Toastbrot", "aria-label": "Zusatz" })),
         h("div", { class: "f-preis-wrap" }, preisInput(d), h("span", { "aria-hidden": "true" }, "€")),
         h("div", { class: "row-act" },
+          eyeBtn(d, "Gericht"),
           iconBtn("Nach oben", "↑", function () { move(g.gerichte, di, -1); changed(); render(); }),
           iconBtn("Nach unten", "↓", function () { move(g.gerichte, di, 1); changed(); render(); }),
           iconBtn("Gericht löschen", "×", function () { if (!d.name || confirm("„" + d.name + "“ löschen?")) { g.gerichte.splice(di, 1); changed(); render(); } }, "ibtn--del"))));
     });
     var andere = bereich.spalten.length === 2 ? bereich.spalten[1 - si] : null;
     var leer = suche && !rows.querySelector(".is-hit");
-    return h("section", { class: "grp" + (leer ? " is-hidden" : "") },
+    return h("section", { class: "grp" + (leer ? " is-hidden" : "") + (g.aus ? " is-aus" : "") },
       h("div", { class: "grp__head" },
         inp(g, "titel", { class: "f-gtitel", placeholder: "Überschrift (optional), z. B. Biere vom Fass", "aria-label": "Überschrift der Gruppe" }),
+        g.aus && h("span", { class: "badge" }, "Ausgeblendet"),
         h("div", { class: "row-act" },
+          eyeBtn(g, "Gruppe"),
           iconBtn("Gruppe nach oben", "↑", function () { move(spalte, gi, -1); changed(); render(); }),
           iconBtn("Gruppe nach unten", "↓", function () { move(spalte, gi, 1); changed(); render(); }),
           andere && iconBtn(si === 0 ? "In rechte Spalte verschieben" : "In linke Spalte verschieben", si === 0 ? "→" : "←", function () { andere.push(spalte.splice(gi, 1)[0]); changed(); render(); }),
@@ -169,7 +182,7 @@
   function renderSpeisekarte() {
     var sk = state.speisekarte;
     if (karteIdx !== "getraenke" && !sk.karten[karteIdx]) karteIdx = 0;
-    var anzahl = function (bs) { var n = 0; bs.forEach(function (b) { b.spalten.forEach(function (s) { s.forEach(function (g) { n += g.gerichte.length; }); }); }); return n; };
+    var anzahl = function (bs) { var n = 0; bs.forEach(function (b) { b.spalten.forEach(function (s) { s.forEach(function (g) { if (!g.aus) g.gerichte.forEach(function (d) { if (!d.aus) n++; }); }); }); }); return n; };
     var pills = h("div", { class: "pills", role: "group", "aria-label": "Karte wählen" },
       sk.karten.map(function (k, i) {
         return h("button", { type: "button", "aria-pressed": karteIdx === i ? "true" : "false", onclick: function () { karteIdx = i; render(); } },
@@ -180,7 +193,9 @@
     var search = h("input", { type: "search", class: "search", placeholder: "Gericht suchen, z. B. Schnitzel", "aria-label": "Gericht suchen", value: suche,
       oninput: function () { suche = this.value.toLowerCase().trim(); var pos = this.selectionStart; render(); var s = app.querySelector(".search"); s.focus(); s.setSelectionRange(pos, pos); } });
     search.value = suche;
-    var vorschau = h("a", { class: "btn btn--ghost btn--sm", href: SITE + "speisekarte", target: "_blank", rel: "noopener" }, "Speisekarte ansehen ↗");
+    var vorschau = h("div", { class: "pagehead__act" },
+      h("button", { type: "button", class: "btn btn--primary btn--sm", onclick: drucken }, "Drucken / PDF"),
+      h("a", { class: "btn btn--ghost btn--sm", href: SITE + "speisekarte", target: "_blank", rel: "noopener" }, "Speisekarte ansehen ↗"));
 
     app.appendChild(h("div", { class: "pagehead" },
       h("div", null, h("h1", null, "Speisekarte"), h("p", { class: "muted" }, "Preise, Gerichte und Reihenfolge ändern. Gespeichert wird erst mit „Speichern“ unten.")),
@@ -199,6 +214,60 @@
       h("label", { class: "chk" }, h("input", { type: "checkbox", checked: !!k.menue, onchange: function () { k.menue = this.checked; changed(); } }), h("span", null, "Menü-Darstellung: „Tagessuppe“ über und „Nachtisch“ unter jedem Gericht (erster Abschnitt)")),
       h("label", { class: "chk" }, h("input", { type: "checkbox", checked: !!k.getraenke, onchange: function () { k.getraenke = this.checked; changed(); } }), h("span", null, "Getränkekarte anhängen"))));
     app.appendChild(bereicheEditor(k.bereiche));
+  }
+
+
+  /* =====================================================================
+     Drucken: einheitliches A4-Layout mit Logo, aus dem aktuellen (auch ungespeicherten) Stand
+     ===================================================================== */
+  function druckBereich(b, menue, mitNr) {
+    var cols = b.spalten.map(function (sp) {
+      return h("div", { class: "p-col" }, sp.filter(function (g) { return !g.aus && g.gerichte.some(function (d) { return !d.aus; }); }).map(function (g) {
+        return h("div", { class: "p-grp" },
+          g.titel && h("h3", null, g.titel),
+          g.gerichte.filter(function (d) { return !d.aus; }).map(function (d) {
+            return h("div", { class: "p-dish" + (menue ? " p-dish--menu" : "") },
+              mitNr && h("span", { class: "p-nr" }, d.nr),
+              h("div", { class: "p-name" },
+                menue && h("span", { class: "p-course" }, "Tagessuppe"),
+                h("strong", null, d.name),
+                !menue && d.zusatz && h("span", { class: "p-zusatz" }, d.zusatz),
+                menue && h("span", { class: "p-course" }, "Nachtisch")),
+              h("span", { class: "p-preis" }, d.preis + " €"));
+          }),
+          g.hinweis && h("p", { class: "p-hinweis" }, g.hinweis));
+      }));
+    });
+    return h("div", { class: "p-cols p-cols--" + b.spalten.length }, cols);
+  }
+  function druckKopf(titel, unter) {
+    return h("header", { class: "p-head" },
+      h("img", { src: SITE + "assets/img/logo-dark-900.png", alt: "Gasthof Hühnerkirche" }),
+      h("h1", null, titel), unter && h("p", null, unter));
+  }
+  function hatNr(bs) { return bs.some(function (b) { return b.spalten.some(function (s) { return s.some(function (g) { return g.gerichte.some(function (d) { return d.nr; }); }); }); }); }
+  function drucken() {
+    var sk = state.speisekarte, alt = document.getElementById("print");
+    if (alt) alt.remove();
+    var seiten = [];
+    var getraenke = function () {
+      return h("section", { class: "p-page p-page--break" }, druckKopf("Getränke", ""),
+        sk.getraenke.bereiche.map(function (b) { return druckBereich(b, false, true); }));
+    };
+    if (karteIdx === "getraenke") seiten.push(getraenke());
+    else {
+      var k = sk.karten[karteIdx], nr = hatNr(k.bereiche);
+      seiten.push(h("section", { class: "p-page" }, druckKopf(k.titel, k.untertitel),
+        k.bereiche.map(function (b, i) { return druckBereich(b, !!k.menue && i === 0, nr); })));
+      if (k.getraenke) seiten.push(getraenke());
+    }
+    var fuss = h("footer", { class: "p-foot" }, "Gasthof Hühnerkirche · Hühnerkirche 1 · 65510 Hünstetten · Telefon 06126 8321 · www.huehnerkirche.de",
+      h("br"), "Im Preis sind Bedienung und Mehrwertsteuer enthalten. Zu Zusatzstoffen und Allergenen fragen Sie bitte unser Personal.");
+    var p = h("div", { id: "print", "aria-hidden": "true" }, seiten, fuss);
+    document.body.appendChild(p);
+    var img = p.querySelector("img");
+    var los = function () { window.print(); };
+    if (img.complete) setTimeout(los, 50); else { img.onload = los; img.onerror = los; }
   }
 
   /* =====================================================================
