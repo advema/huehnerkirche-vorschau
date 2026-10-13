@@ -234,30 +234,49 @@ input, textarea { font: inherit; color: var(--ink); }
 /* ---------- Druckansicht (A4) ---------- */
 #print { display: none; }
 @media print {
-  @page { size: A4; margin: 14mm 16mm 16mm; }
-  body { background: #fff; }
+  /* Eigene Randfelder: Chrome druckt dann kein Datum/Titel/URL (getestet mit Chrome 155). */
+  @page { size: A4; margin: 13mm 17mm 16mm; @top-center { content: "\200B"; }
+    @bottom-center { content: "Gasthof Hühnerkirche · Hühnerkirche 1 · 65510 Hünstetten · Telefon 06126 8321\A Im Preis sind Bedienung und Mehrwertsteuer enthalten. Zu Zusatzstoffen und Allergenen fragen Sie bitte unser Personal.";
+      white-space: pre; font-family: "Source Serif 4", Georgia, serif; font-size: 7.5pt; color: #777; vertical-align: top; padding-top: 3mm; } }
+  html, body { background: #fff !important; margin: 0; padding: 0; }
   body > *:not(#print) { display: none !important; }
-  #print { display: block; font-family: var(--serif); color: #111; font-size: 10.5pt; line-height: 1.35; }
-  .p-page--break { break-before: page; }
-  .p-head { text-align: center; margin-bottom: 7mm; }
-  .p-head img { width: 34mm; height: auto; display: block; margin: 0 auto 3mm; }
-  .p-head h1 { font-family: var(--display); font-size: 20pt; margin: 0; color: #1E3767; }
-  .p-head p { margin: 1mm 0 0; font-style: italic; color: #555; }
-  .p-head::after { content: ""; display: block; width: 30mm; height: 0.6mm; background: #C9A25A; margin: 4mm auto 0; }
-  .p-cols { display: grid; gap: 0 9mm; margin-bottom: 5mm; }
-  .p-cols--2 { grid-template-columns: 1fr 1fr; }
-  .p-cols--2 .p-col + .p-col { border-left: 0.3mm solid #ddd; padding-left: 9mm; }
-  .p-grp { break-inside: avoid; margin-bottom: 4mm; }
-  .p-grp h3 { font-family: var(--display); font-size: 11.5pt; color: #1E3767; margin: 0 0 1.5mm; text-align: center; }
-  .p-dish { display: grid; grid-template-columns: 9mm 1fr auto; gap: 0 3mm; align-items: baseline; padding: 0.8mm 0; break-inside: avoid; }
-  .p-cols .p-dish:not(:has(.p-nr)) { grid-template-columns: 1fr auto; }
-  .p-nr { color: #777; font-size: 9pt; }
-  .p-name strong { font-weight: 400; }
+  #print { display: block; font-family: var(--serif); color: #1a1a1a; font-size: 10.2pt; line-height: 1.34; }
+  .p-sheet + .p-sheet { break-before: page; }
+
+  .p-head { text-align: center; margin: 0 0 6mm; }
+  .p-head img { width: 25mm; height: auto; display: block; margin: 0 auto 3mm; }
+  .p-head h1 { font-family: var(--display); font-size: 19pt; line-height: 1.15; margin: 0; color: #1E3767; letter-spacing: .01em; }
+  .p-head p { margin: 1.5mm 0 0; font-style: italic; color: #6b6b6b; }
+  .p-head::after { content: ""; display: block; width: 24mm; height: 0.5mm; background: #C9A25A; margin: 4mm auto 0; }
+
+  /* einspaltig: schmalere, mittige Spalte liest sich wie eine gedruckte Karte */
+  .p-cols { margin: 0 auto 7mm; }
+  .p-cols--1 { max-width: 138mm; }
+  .p-cols--2 { display: flex; gap: 0 8mm; align-items: flex-start; }
+  .p-cols--2 .p-col { flex: 1 1 0; min-width: 0; }
+  .p-cols--2 .p-col + .p-col { border-left: 0.25mm solid #e4dfd2; padding-left: 8mm; }
+  .p-cols + .p-cols { padding-top: 6mm; border-top: 0.25mm solid #e4dfd2; }
+
+  .p-grp { margin-bottom: 4.5mm; }
+  .p-grp h3 { display: flex; align-items: center; gap: 3mm; font-family: var(--display); font-size: 11pt; color: #1E3767; margin: 0 0 2mm; break-after: avoid; }
+  .p-grp h3::before, .p-grp h3::after { content: ""; flex: 1; height: 0.25mm; background: #C9A25A; opacity: .7; }
+  .p-dish { display: grid; grid-template-columns: 7mm 1fr auto; column-gap: 2.5mm; align-items: baseline; padding: 0.9mm 0; break-inside: avoid; }
+  .p-dish--ohne-nr { grid-template-columns: 1fr auto; }
+  .p-nr { color: #8a8a8a; font-size: 8.5pt; font-variant-numeric: tabular-nums; }
   .p-name { display: grid; }
-  .p-zusatz { font-style: italic; color: #555; font-size: 9.5pt; }
-  .p-course { font-style: italic; color: #777; font-size: 9pt; }
-  .p-dish--menu { padding: 1.6mm 0; border-bottom: 0.2mm solid #eee; }
-  .p-preis { white-space: nowrap; font-variant-numeric: tabular-nums lining-nums; align-self: end; }
-  .p-hinweis { font-style: italic; color: #555; font-size: 9pt; margin: 1mm 0 0; }
-  .p-foot { margin-top: 6mm; padding-top: 3mm; border-top: 0.3mm solid #C9A25A; text-align: center; font-size: 8.5pt; color: #666; }
+  .p-name em { font-size: 9pt; color: #6b6b6b; }
+  .p-preis { white-space: nowrap; font-variant-numeric: tabular-nums lining-nums; align-self: end; padding-left: 2mm; }
+  .p-hinweis { font-style: italic; color: #6b6b6b; font-size: 9pt; margin: 1.2mm 0 0; text-align: center; }
+
+  /* Sonntagsmenü: zentriert wie auf der gedruckten Karte */
+  .p-menu { position: relative; display: grid; justify-items: center; text-align: center; padding: 1.5mm 22mm; break-inside: avoid; line-height: 1.28; }
+  .p-menu + .p-menu { border-top: 0.25mm solid #eee8da; }
+  .p-menu strong { font-weight: 600; font-size: 11pt; margin: 0.4mm 0; }
+  .p-menu .p-preis { position: absolute; right: 0; bottom: 1.5mm; }
+  .p-course { font-style: italic; color: #8a8a8a; font-size: 8.5pt; }
+
+  .p-foot { break-inside: avoid; margin-top: 8mm; text-align: center; font-size: 8.5pt; color: #6b6b6b; }
+  .p-foot::before { content: ""; display: block; width: 24mm; height: 0.5mm; background: #C9A25A; margin: 0 auto 4mm; }
+  .p-foot p { margin: 0.6mm 0; }
+  .p-foot__adr { margin-top: 2.5mm !important; color: #1E3767; }
 }

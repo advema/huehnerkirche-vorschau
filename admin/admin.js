@@ -221,18 +221,18 @@
      Drucken: einheitliches A4-Layout mit Logo, aus dem aktuellen (auch ungespeicherten) Stand
      ===================================================================== */
   function druckBereich(b, menue, mitNr) {
+    var gruppen = function (sp) { return sp.filter(function (g) { return !g.aus && g.gerichte.some(function (d) { return !d.aus; }); }); };
     var cols = b.spalten.map(function (sp) {
-      return h("div", { class: "p-col" }, sp.filter(function (g) { return !g.aus && g.gerichte.some(function (d) { return !d.aus; }); }).map(function (g) {
-        return h("div", { class: "p-grp" },
-          g.titel && h("h3", null, g.titel),
+      return h("div", { class: "p-col" }, gruppen(sp).map(function (g) {
+        return h("div", { class: "p-grp" + (g.titel ? " p-grp--titel" : "") },
+          g.titel && h("h3", null, h("span", null, g.titel)),
           g.gerichte.filter(function (d) { return !d.aus; }).map(function (d) {
-            return h("div", { class: "p-dish" + (menue ? " p-dish--menu" : "") },
+            if (menue) return h("div", { class: "p-menu" },
+              h("span", { class: "p-course" }, "Tagessuppe"), h("strong", null, d.name), h("span", { class: "p-course" }, "Nachtisch"),
+              h("span", { class: "p-preis" }, d.preis + " €"));
+            return h("div", { class: "p-dish" + (mitNr ? "" : " p-dish--ohne-nr") },
               mitNr && h("span", { class: "p-nr" }, d.nr),
-              h("div", { class: "p-name" },
-                menue && h("span", { class: "p-course" }, "Tagessuppe"),
-                h("strong", null, d.name),
-                !menue && d.zusatz && h("span", { class: "p-zusatz" }, d.zusatz),
-                menue && h("span", { class: "p-course" }, "Nachtisch")),
+              h("span", { class: "p-name" }, d.name, d.zusatz && h("em", null, d.zusatz)),
               h("span", { class: "p-preis" }, d.preis + " €"));
           }),
           g.hinweis && h("p", { class: "p-hinweis" }, g.hinweis));
@@ -240,33 +240,31 @@
     });
     return h("div", { class: "p-cols p-cols--" + b.spalten.length }, cols);
   }
-  function druckKopf(titel, unter) {
-    return h("header", { class: "p-head" },
-      h("img", { src: SITE + "assets/img/logo-dark-900.png", alt: "Gasthof Hühnerkirche" }),
-      h("h1", null, titel), unter && h("p", null, unter));
+  function hatNr(bs) { return bs.some(function (b) { return b.spalten.some(function (s) { return s.some(function (g) { return g.gerichte.some(function (d) { return d.nr && !d.aus; }); }); }); }); }
+  function blatt(titel, unter, inhalt, schluss) {
+    return h("section", { class: "p-sheet" },
+      h("header", { class: "p-head" },
+        h("img", { src: SITE + "assets/img/logo-dark-900.png", alt: "" }),
+        h("h1", null, titel), unter && h("p", null, unter)),
+      inhalt, schluss);
   }
-  function hatNr(bs) { return bs.some(function (b) { return b.spalten.some(function (s) { return s.some(function (g) { return g.gerichte.some(function (d) { return d.nr; }); }); }); }); }
   function drucken() {
     var sk = state.speisekarte, alt = document.getElementById("print");
     if (alt) alt.remove();
-    var seiten = [];
-    var getraenke = function () {
-      return h("section", { class: "p-page p-page--break" }, druckKopf("Getränke", ""),
-        sk.getraenke.bereiche.map(function (b) { return druckBereich(b, false, true); }));
-    };
-    if (karteIdx === "getraenke") seiten.push(getraenke());
+    var fuss = function () { return null; }; // Preis-/Kontakthinweis steht im Seitenrand (@page, admin.css)
+    var drinks = function () { return blatt("Getränke", "", sk.getraenke.bereiche.map(function (b) { return druckBereich(b, false, true); }), fuss()); };
+    var blaetter = [];
+    if (karteIdx === "getraenke") blaetter.push(drinks());
     else {
       var k = sk.karten[karteIdx], nr = hatNr(k.bereiche);
-      seiten.push(h("section", { class: "p-page" }, druckKopf(k.titel, k.untertitel),
-        k.bereiche.map(function (b, i) { return druckBereich(b, !!k.menue && i === 0, nr); })));
-      if (k.getraenke) seiten.push(getraenke());
+      blaetter.push(blatt(k.titel, k.untertitel, k.bereiche.map(function (b, i) { return druckBereich(b, !!k.menue && i === 0, nr); }), k.getraenke ? null : fuss()));
+      if (k.getraenke) blaetter.push(drinks());
     }
-    var fuss = h("footer", { class: "p-foot" }, "Gasthof Hühnerkirche · Hühnerkirche 1 · 65510 Hünstetten · Telefon 06126 8321 · www.huehnerkirche.de",
-      h("br"), "Im Preis sind Bedienung und Mehrwertsteuer enthalten. Zu Zusatzstoffen und Allergenen fragen Sie bitte unser Personal.");
-    var p = h("div", { id: "print", "aria-hidden": "true" }, seiten, fuss);
+    var p = h("div", { id: "print", "aria-hidden": "true" }, blaetter);
     document.body.appendChild(p);
+    var titel = document.title; document.title = " ";
+    var los = function () { window.print(); document.title = titel; };
     var img = p.querySelector("img");
-    var los = function () { window.print(); };
     if (img.complete) setTimeout(los, 50); else { img.onload = los; img.onerror = los; }
   }
 
