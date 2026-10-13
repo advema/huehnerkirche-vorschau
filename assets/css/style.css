@@ -194,8 +194,8 @@ body:not(:has(.hero, .page-head)) main { padding-top: var(--header-h); }
 @media (min-width: 900px) { .hero { min-height: max(40rem, calc(100svh - var(--callbar-h))); } }
 .hero__bg { position: absolute; inset: 0; z-index: -2; }
 /* Motiv: Gasthaus rechts der Mitte, Straße links unter dem Text */
-.hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 55% 55%; animation: hero-zoom 2.4s cubic-bezier(.2,.7,.2,1) both; }
-@media (max-width: 760px) { .hero__bg img { object-position: 62% 50%; } }
+.hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 0% 55%; transform-origin: 0% 55%; scale: 1.18; animation: hero-zoom 2.4s cubic-bezier(.2,.7,.2,1) both; }
+@media (max-width: 760px) { .hero__bg img { scale: 1; object-position: 62% 50%; } }
 @keyframes hero-zoom { from { transform: scale(1.08); } to { transform: none; } }
 .hero::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
@@ -272,8 +272,6 @@ body { padding-bottom: var(--callbar-h); }
     background-size: auto, cover; background-position: 0 0, 55% 50%; }
 }
 /* Eigene Drohnenmotive je Unterseite, Gasthaus jeweils rechts im hellen Bereich */
-.page-head--fassade { background-image: linear-gradient(180deg, rgba(18,30,58,.6) 0%, rgba(18,30,58,0) 30%), linear-gradient(90deg, rgba(30,55,103,.95) 0%, rgba(30,55,103,.85) 30%, rgba(42,74,135,.3) 56%, rgba(42,74,135,0) 76%), image-set(url("/huehnerkirche-vorschau/assets/img/kopf-fassade-1920.avif") type("image/avif"), url("/huehnerkirche-vorschau/assets/img/kopf-fassade-1920.webp") type("image/webp"), url("/huehnerkirche-vorschau/assets/img/kopf-fassade-1280.jpg") type("image/jpeg")); background-size: auto, auto, cover; background-position: 0 0, 0 0, 100% 50%; }
-@media (max-width: 760px) { .page-head--fassade { background-image: linear-gradient(180deg, rgba(30,55,103,.7) 0%, rgba(30,55,103,.9) 100%), url("/huehnerkirche-vorschau/assets/img/kopf-fassade-800.webp"); background-size: auto, cover; background-position: 0 0, 70% 50%; } }
 .page-head--hof-licht { background-image: linear-gradient(180deg, rgba(18,30,58,.6) 0%, rgba(18,30,58,0) 30%), linear-gradient(90deg, rgba(30,55,103,.95) 0%, rgba(30,55,103,.85) 30%, rgba(42,74,135,.3) 56%, rgba(42,74,135,0) 76%), image-set(url("/huehnerkirche-vorschau/assets/img/kopf-hof-licht-1920.avif") type("image/avif"), url("/huehnerkirche-vorschau/assets/img/kopf-hof-licht-1920.webp") type("image/webp"), url("/huehnerkirche-vorschau/assets/img/kopf-hof-licht-1280.jpg") type("image/jpeg")); background-size: auto, auto, cover; background-position: 0 0, 0 0, 100% 50%; }
 @media (max-width: 760px) { .page-head--hof-licht { background-image: linear-gradient(180deg, rgba(30,55,103,.7) 0%, rgba(30,55,103,.9) 100%), url("/huehnerkirche-vorschau/assets/img/kopf-hof-licht-800.webp"); background-size: auto, cover; background-position: 0 0, 70% 50%; } }
 .page-head--lage { background-image: linear-gradient(180deg, rgba(18,30,58,.6) 0%, rgba(18,30,58,0) 30%), linear-gradient(90deg, rgba(30,55,103,.95) 0%, rgba(30,55,103,.85) 30%, rgba(42,74,135,.3) 56%, rgba(42,74,135,0) 76%), image-set(url("/huehnerkirche-vorschau/assets/img/kopf-lage-1920.avif") type("image/avif"), url("/huehnerkirche-vorschau/assets/img/kopf-lage-1920.webp") type("image/webp"), url("/huehnerkirche-vorschau/assets/img/kopf-lage-1280.jpg") type("image/jpeg")); background-size: auto, auto, cover; background-position: 0 0, 0 0, 100% 50%; }
