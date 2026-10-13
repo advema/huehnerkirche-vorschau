@@ -9,7 +9,11 @@
   KEYS.forEach(function (k) { state[k] = clone(S[k]); saved[k] = clone(S[k]); });
   var DEMO = document.body.hasAttribute("data-demo");
   var SITE = new URL("../", location.href).pathname; // "/" auf dem Server, Unterordner in der Vorschau
-  if (DEMO) KEYS.forEach(function (k) { try { var v = localStorage.getItem("hk-demo-" + k); if (v) { state[k] = JSON.parse(v); saved[k] = JSON.parse(v); } } catch (e) {} });
+  if (DEMO) KEYS.forEach(function (k) { try {
+    var v = localStorage.getItem("hk-demo-" + k); if (!v) return;
+    var o = JSON.parse(v); if (k === "speisekarte" && !o.artikel) return; // alter Teststand ohne Artikelliste
+    state[k] = o; saved[k] = JSON.parse(v);
+  } catch (e) {} });
   var tab = "speisekarte";
   var karteIdx = 0; // Index in karten, oder "getraenke"
   var suche = "";
