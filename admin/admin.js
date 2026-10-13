@@ -28,8 +28,9 @@
     });
     for (var i = 2; i < arguments.length; i++) {
       var c = arguments[i];
-      if (c == null || c === false) continue;
-      (Array.isArray(c) ? c : [c]).forEach(function (x) { if (x != null && x !== false) el.appendChild(typeof x === "string" ? document.createTextNode(x) : x); });
+      var leer = function (x) { return x == null || x === false || x === 0 || x === ""; }; // „a && b“-Muster liefert evtl. 0/""
+      if (leer(c)) continue;
+      (Array.isArray(c) ? c : [c]).forEach(function (x) { if (!leer(x)) el.appendChild(typeof x === "string" || typeof x === "number" ? document.createTextNode(String(x)) : x); });
     }
     return el;
   }
@@ -112,22 +113,75 @@
   }
   function neuesGericht() { return { nr: "", name: "", preis: "", zusatz: "" }; }
 
-  function gruppeCard(spalte, gi, bereich, si) {
+  /* ---------- Artikelliste: nummerierte Speisen/Getränke mit zentralem Preis ---------- */
+  var GELOESCHT = { nr: "", name: "(gelöschter Artikel)", preis: "", zusatz: "" };
+  function artikel() { return state.speisekarte.artikel || (state.speisekarte.artikel = []); }
+  function artikelById(id) { var l = artikel(); for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
+  function art(d) { return d.ref ? (artikelById(d.ref) || GELOESCHT) : d; } // Gericht auf Karte -> anzuzeigende Daten
+  function neueId() { return "a" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); }
+  function karteName(key) { return key === "getraenke" ? "Getränke" : (state.speisekarte.karten[key] || {}).titel || ""; }
+  function bereicheVon(key) { return key === "getraenke" ? state.speisekarte.getraenke.bereiche : state.speisekarte.karten[key].bereiche; }
+  /** Alle Plätze auf allen Karten: {key, path, d, a} */
+  function allePlaetze() {
+    var out = [], keys = state.speisekarte.karten.map(function (_, i) { return i; }).concat(["getraenke"]);
+    keys.forEach(function (key) {
+      bereicheVon(key).forEach(function (b, bi) { b.spalten.forEach(function (sp, si) { sp.forEach(function (g, gi) { g.gerichte.forEach(function (d, di) {
+        out.push({ key: key, path: [key, bi, si, gi, di].join("|"), d: d, a: art(d) });
+      }); }); }); });
+    });
+    return out;
+  }
+  // Ähnlichkeit für den Preis-Abgleich: gleiches Hauptwort am Anfang + genug gemeinsame Wörter
+  var STOP = { mit: 1, und: 1, oder: 1, der: 1, die: 1, das: 1, vom: 1, von: 1, gem: 1, dem: 1, den: 1, frische: 1, portion: 1, glas: 1 };
+  function worte(s) { return s.toLowerCase().replace(/[^a-zäöüß ]/g, " ").split(/\s+/).filter(function (w) { return w.length > 2 && !STOP[w]; }); }
+  function aehnlich(x, y) {
+    var a = worte(x), b = worte(y);
+    if (!a.length || !b.length || a[0].slice(0, 5) !== b[0].slice(0, 5)) return 0;
+    var setB = {}, gemein = 0; b.forEach(function (w) { setB[w.slice(0, 6)] = 1; });
+    a.forEach(function (w) { if (setB[w.slice(0, 6)]) gemein++; });
+    return gemein / Math.max(a.length, b.length);
+  }
+  var PLAETZE = []; // pro Rendern neu berechnet
+  function abgleich(key, d) {
+    var a = art(d);
+    if (!a.name) return [];
+    return PLAETZE.filter(function (p) { return p.key !== key && !(d.ref && p.d.ref === d.ref) && !p.d.aus; })
+      .map(function (p) { return { p: p, s: aehnlich(a.name, p.a.name) }; })
+      .filter(function (m) { return m.s >= 0.34; })
+      .sort(function (x, y) { return y.s - x.s; }).slice(0, 3).map(function (m) { return m.p; });
+  }
+  var springZiel = null;
+  function springe(p) {
+    karteIdx = p.key; suche = ""; springZiel = p.path; tab = "speisekarte"; render();
+  }
+
+  function gruppeCard(spalte, gi, bereich, si, bi, key) {
     var g = spalte[gi];
     var rows = h("div", { class: "dishes" });
     g.gerichte.forEach(function (d, di) {
-      var treffer = !suche || (d.name + " " + d.zusatz + " " + d.nr).toLowerCase().indexOf(suche) > -1;
-      rows.appendChild(h("div", { class: "dish-row" + (treffer ? "" : " is-hidden") + (suche && treffer ? " is-hit" : "") + (d.aus ? " is-aus" : "") },
-        inp(d, "nr", { class: "f-nr", placeholder: "Nr.", "aria-label": "Nummer", inputmode: "numeric" }),
+      var a = art(d);
+      var treffer = !suche || (a.name + " " + a.zusatz + " " + a.nr).toLowerCase().indexOf(suche) > -1;
+      var aehnliche = abgleich(key, d);
+      rows.appendChild(h("div", { class: "dish-row" + (treffer ? "" : " is-hidden") + (suche && treffer ? " is-hit" : "") + (d.aus ? " is-aus" : "") + (d.ref ? " is-ref" : ""), "data-path": [key, bi, si, gi, di].join("|") },
+        inp(a, "nr", { class: "f-nr", placeholder: "Nr.", "aria-label": "Nummer", inputmode: "numeric" }),
         h("div", { class: "f-main" },
-          inp(d, "name", { class: "f-name", placeholder: "Name des Gerichts", "aria-label": "Name" }),
-          inp(d, "zusatz", { class: "f-zusatz", placeholder: "Zusatz (optional), z. B. mit Toastbrot", "aria-label": "Zusatz" })),
-        h("div", { class: "f-preis-wrap" }, preisInput(d), h("span", { "aria-hidden": "true" }, "€")),
+          inp(a, "name", { class: "f-name", placeholder: "Name des Gerichts", "aria-label": "Name" }),
+          inp(a, "zusatz", { class: "f-zusatz", placeholder: "Zusatz (optional), z. B. mit Toastbrot", "aria-label": "Zusatz" })),
+        h("div", { class: "f-preis-wrap" }, preisInput(a), h("span", { "aria-hidden": "true" }, "€")),
         h("div", { class: "row-act" },
           eyeBtn(d, "Gericht"),
           iconBtn("Nach oben", "↑", function () { move(g.gerichte, di, -1); changed(); render(); }),
           iconBtn("Nach unten", "↓", function () { move(g.gerichte, di, 1); changed(); render(); }),
-          iconBtn("Gericht löschen", "×", function () { if (!d.name || confirm("„" + d.name + "“ löschen?")) { g.gerichte.splice(di, 1); changed(); render(); } }, "ibtn--del"))));
+          iconBtn(d.ref ? "Von dieser Karte nehmen (Artikel bleibt in der Artikelliste)" : "Gericht löschen", "×", function () {
+            if (d.ref || !a.name || confirm("„" + a.name + "“ löschen?")) { g.gerichte.splice(di, 1); changed(); render(); }
+          }, "ibtn--del")),
+        (d.ref || aehnliche.length) && h("div", { class: "row-info" },
+          d.ref && h("span", { class: "ref-tag", title: "Preis und Name werden zentral in der Artikelliste gepflegt" }, "Artikelliste · gilt überall"),
+          aehnliche.length && h("span", { class: "match" }, "Ähnlich:", aehnliche.map(function (p) {
+            var gleich = p.a.preis === a.preis;
+            return h("button", { type: "button", class: "match__chip" + (gleich ? " is-same" : ""), title: "Zu „" + p.a.name + "“ springen", onclick: function () { springe(p); } },
+              karteName(p.key) + " · " + p.a.preis + " €" + (gleich ? " ✓" : ""));
+          })))));
     });
     var andere = bereich.spalten.length === 2 ? bereich.spalten[1 - si] : null;
     var leer = suche && !rows.querySelector(".is-hit");
@@ -144,7 +198,77 @@
       rows,
       h("div", { class: "grp__foot" },
         h("button", { type: "button", class: "addbtn", onclick: function () { g.gerichte.push(neuesGericht()); changed(); render(); } }, "+ Gericht"),
+        artikelAuswahl(g),
         inp(g, "hinweis", { class: "f-ghinweis", placeholder: "Hinweis unter der Gruppe (optional)", "aria-label": "Hinweis unter der Gruppe" })));
+  }
+
+  function artikelAuswahl(g) {
+    var box = h("div", { class: "picker", hidden: true });
+    var feld = h("input", { type: "search", class: "picker__in", placeholder: "Nummer oder Name, z. B. 233 oder Rumpsteak", "aria-label": "Artikel suchen" });
+    var liste = h("ul", { class: "picker__list" });
+    var zeig = function () {
+      var q = feld.value.toLowerCase().trim(), schon = {};
+      g.gerichte.forEach(function (d) { if (d.ref) schon[d.ref] = 1; });
+      liste.textContent = "";
+      artikel().filter(function (a) { return !schon[a.id] && (!q || (a.nr + " " + a.name).toLowerCase().indexOf(q) > -1); }).slice(0, 8).forEach(function (a) {
+        liste.appendChild(h("li", null, h("button", { type: "button", onclick: function () { g.gerichte.push({ ref: a.id }); changed(); render(); } },
+          h("span", { class: "picker__nr" }, a.nr || "–"), h("span", null, a.name), h("span", { class: "picker__preis" }, a.preis + " €"))));
+      });
+      if (q && !liste.children.length) liste.appendChild(h("li", { class: "muted small" }, "Kein Artikel gefunden. In der „Artikelliste“ neu anlegen."));
+    };
+    feld.addEventListener("input", zeig);
+    box.appendChild(feld); box.appendChild(liste);
+    var btn = h("button", { type: "button", class: "addbtn", onclick: function () { box.hidden = !box.hidden; if (!box.hidden) { zeig(); feld.focus(); } } }, "+ Aus Artikelliste");
+    return h("div", { class: "picker-wrap" }, btn, box);
+  }
+
+  var artFilter = "alle";
+  function renderArtikel() {
+    var verw = {};
+    PLAETZE.forEach(function (p) { if (p.d.ref) (verw[p.d.ref] = verw[p.d.ref] || []).push(p); });
+    var liste = artikel().slice().sort(function (x, y) {
+      if (!x.nr !== !y.nr) return x.nr ? 1 : -1; // neue ohne Nummer oben
+      return (parseInt(x.nr, 10) || 0) - (parseInt(y.nr, 10) || 0);
+    }).filter(function (a) {
+      if (artFilter === "frei" && verw[a.id]) return false;
+      if (artFilter !== "alle" && artFilter !== "frei" && a.gruppe !== artFilter) return false;
+      return !suche || (a.nr + " " + a.name + " " + a.zusatz).toLowerCase().indexOf(suche) > -1;
+    });
+    app.appendChild(h("div", { class: "card card--info" }, h("p", null,
+      "Alle nummerierten Speisen und Getränke an einer Stelle. Ein Preis, den Sie hier ändern, gilt auf jeder Karte, auf der der Artikel steht. ",
+      "Artikel ohne Platz auf einer Karte erscheinen nicht auf der Website. Auf eine Karte holen Sie sie dort mit „+ Aus Artikelliste“.")));
+    app.appendChild(h("div", { class: "art-bar" },
+      h("div", { class: "seg", role: "group", "aria-label": "Filter" }, [["alle", "Alle"], ["Speisen", "Speisen"], ["Getränke", "Getränke"], ["frei", "Nicht auf einer Karte"]].map(function (o) {
+        return h("button", { type: "button", "aria-pressed": artFilter === o[0] ? "true" : "false", onclick: function () { artFilter = o[0]; render(); } }, o[1]);
+      })),
+      h("button", { type: "button", class: "btn btn--primary btn--sm", onclick: function () {
+        artikel().push({ id: neueId(), nr: "", name: "", zusatz: "", preis: "", gruppe: artFilter === "Getränke" ? "Getränke" : "Speisen" });
+        suche = ""; changed(); render(); var f = app.querySelector(".art-row .f-nr"); if (f) f.focus();
+      } }, "+ Neuer Artikel")));
+    var tbl = h("div", { class: "card art-list" });
+    if (!liste.length) tbl.appendChild(h("p", { class: "muted" }, "Keine Artikel gefunden."));
+    liste.forEach(function (a) {
+      var wo = verw[a.id] || [];
+      tbl.appendChild(h("div", { class: "art-row dish-row" + (wo.length ? "" : " is-frei") },
+        inp(a, "nr", { class: "f-nr", placeholder: "Nr.", "aria-label": "Nummer", inputmode: "numeric" }),
+        h("div", { class: "f-main" },
+          inp(a, "name", { class: "f-name", placeholder: "Name", "aria-label": "Name" }),
+          inp(a, "zusatz", { class: "f-zusatz", placeholder: "Zusatz (optional)", "aria-label": "Zusatz" })),
+        h("div", { class: "f-preis-wrap" }, preisInput(a), h("span", { "aria-hidden": "true" }, "€")),
+        h("div", { class: "row-act" },
+          h("select", { class: "f-gruppe", "aria-label": "Art", onchange: function () { a.gruppe = this.value; changed(); } },
+            ["Speisen", "Getränke"].map(function (o) { return h("option", { value: o, selected: a.gruppe === o }, o); })),
+          iconBtn("Artikel löschen", "×", function () {
+            if (wo.length && !confirm("„" + a.name + "“ steht auf " + wo.length + " Karte(n). Dort ebenfalls entfernen und Artikel löschen?")) return;
+            if (!wo.length && a.name && !confirm("„" + a.name + "“ löschen?")) return;
+            wo.forEach(function (p) { var x = p.path.split("|"); var g = bereicheVon(p.key === "getraenke" ? "getraenke" : +x[0])[+x[1]].spalten[+x[2]][+x[3]]; g.gerichte = g.gerichte.filter(function (d) { return d.ref !== a.id; }); });
+            state.speisekarte.artikel = artikel().filter(function (y) { return y !== a; }); changed(); render();
+          }, "ibtn--del")),
+        h("div", { class: "row-info" }, wo.length
+          ? wo.map(function (p) { return h("button", { type: "button", class: "match__chip", onclick: function () { springe(p); } }, "auf " + karteName(p.key) + (p.d.aus ? " (ausgeblendet)" : "")); })
+          : h("span", { class: "frei-tag" }, "Nicht auf einer Karte"))));
+    });
+    app.appendChild(tbl);
   }
 
   function bereicheEditor(bereiche) {
@@ -154,10 +278,10 @@
       b.spalten.forEach(function (sp, si) {
         cols.appendChild(h("div", { class: "col" },
           b.spalten.length === 2 && h("p", { class: "col__label" }, si === 0 ? "Linke Spalte" : "Rechte Spalte"),
-          sp.map(function (_, gi) { return gruppeCard(sp, gi, b, si); }),
+          sp.map(function (_, gi) { return gruppeCard(sp, gi, b, si, bi, karteIdx); }),
           h("button", { type: "button", class: "addbtn addbtn--grp", onclick: function () { sp.push({ titel: "", hinweis: "", gerichte: [neuesGericht()] }); changed(); render(); } }, "+ Gruppe")));
       });
-      var trifft = !suche || b.spalten.some(function (sp) { return sp.some(function (g) { return g.gerichte.some(function (d) { return (d.name + " " + d.zusatz + " " + d.nr).toLowerCase().indexOf(suche) > -1; }); }); });
+      var trifft = !suche || b.spalten.some(function (sp) { return sp.some(function (g) { return g.gerichte.some(function (d) { var a = art(d); return (a.name + " " + a.zusatz + " " + a.nr).toLowerCase().indexOf(suche) > -1; }); }); });
       wrap.appendChild(h("section", { class: "bereich" + (trifft ? "" : " is-hidden") },
         h("div", { class: "bereich__head" },
           h("h3", null, "Abschnitt " + (bi + 1)),
@@ -181,7 +305,8 @@
 
   function renderSpeisekarte() {
     var sk = state.speisekarte;
-    if (karteIdx !== "getraenke" && !sk.karten[karteIdx]) karteIdx = 0;
+    PLAETZE = allePlaetze();
+    if (karteIdx !== "getraenke" && karteIdx !== "artikel" && !sk.karten[karteIdx]) karteIdx = 0;
     var anzahl = function (bs) { var n = 0; bs.forEach(function (b) { b.spalten.forEach(function (s) { s.forEach(function (g) { if (!g.aus) g.gerichte.forEach(function (d) { if (!d.aus) n++; }); }); }); }); return n; };
     var pills = h("div", { class: "pills", role: "group", "aria-label": "Karte wählen" },
       sk.karten.map(function (k, i) {
@@ -189,7 +314,9 @@
           k.titel, h("span", { class: "pill-n" }, String(anzahl(k.bereiche))));
       }),
       h("button", { type: "button", "aria-pressed": karteIdx === "getraenke" ? "true" : "false", onclick: function () { karteIdx = "getraenke"; render(); } },
-        "Getränke", h("span", { class: "pill-n" }, String(anzahl(sk.getraenke.bereiche)))));
+        "Getränke", h("span", { class: "pill-n" }, String(anzahl(sk.getraenke.bereiche)))),
+      h("button", { type: "button", class: "pill--artikel", "aria-pressed": karteIdx === "artikel" ? "true" : "false", onclick: function () { karteIdx = "artikel"; render(); } },
+        "Artikelliste", h("span", { class: "pill-n" }, String(artikel().length))));
     var search = h("input", { type: "search", class: "search", placeholder: "Gericht suchen, z. B. Schnitzel", "aria-label": "Gericht suchen", value: suche,
       oninput: function () { suche = this.value.toLowerCase().trim(); var pos = this.selectionStart; render(); var s = app.querySelector(".search"); s.focus(); s.setSelectionRange(pos, pos); } });
     search.value = suche;
@@ -202,6 +329,14 @@
       vorschau));
     app.appendChild(h("div", { class: "toolbar" }, pills, search));
 
+    if (springZiel) {
+      var ziel = springZiel; springZiel = null;
+      setTimeout(function () {
+        var r = app.querySelector('[data-path="' + ziel + '"]');
+        if (r) { r.scrollIntoView({ block: "center", behavior: "smooth" }); r.classList.add("is-flash"); var p = r.querySelector(".f-preis"); if (p) p.focus({ preventScroll: true }); }
+      }, 30);
+    }
+    if (karteIdx === "artikel") { renderArtikel(); return; }
     if (karteIdx === "getraenke") {
       app.appendChild(h("div", { class: "card card--info" }, h("p", null, "Die Getränkekarte gilt für alle Speisekarten, bei denen „Getränkekarte anhängen“ aktiv ist.")));
       app.appendChild(bereicheEditor(sk.getraenke.bereiche));
@@ -226,7 +361,7 @@
       return h("div", { class: "p-col" }, gruppen(sp).map(function (g) {
         return h("div", { class: "p-grp" + (g.titel ? " p-grp--titel" : "") },
           g.titel && h("h3", null, h("span", null, g.titel)),
-          g.gerichte.filter(function (d) { return !d.aus; }).map(function (d) {
+          g.gerichte.filter(function (d) { return !d.aus; }).map(art).map(function (d) {
             if (menue) return h("div", { class: "p-menu" },
               h("span", { class: "p-course" }, "Tagessuppe"), h("strong", null, d.name), h("span", { class: "p-course" }, "Nachtisch"),
               h("span", { class: "p-preis" }, d.preis + " €"));
@@ -240,32 +375,51 @@
     });
     return h("div", { class: "p-cols p-cols--" + b.spalten.length }, cols);
   }
-  function hatNr(bs) { return bs.some(function (b) { return b.spalten.some(function (s) { return s.some(function (g) { return g.gerichte.some(function (d) { return d.nr && !d.aus; }); }); }); }); }
-  function blatt(titel, unter, inhalt, schluss) {
-    return h("section", { class: "p-sheet" },
+  function hatNr(bs) { return bs.some(function (b) { return b.spalten.some(function (s) { return s.some(function (g) { return g.gerichte.some(function (d) { return art(d).nr && !d.aus; }); }); }); }); }
+  function blatt(titel, unter, inhalt, klein) {
+    return h("section", { class: "p-sheet" + (klein ? " p-sheet--folge" : "") },
       h("header", { class: "p-head" },
-        h("img", { src: SITE + "assets/img/logo-dark-900.png", alt: "" }),
+        !klein && h("img", { src: SITE + "assets/img/logo-dark-900.png", alt: "" }),
+        klein && h("p", { class: "p-head__haus" }, "Gasthof Hühnerkirche"),
         h("h1", null, titel), unter && h("p", null, unter)),
-      inhalt, schluss);
+      inhalt);
+  }
+  // Wie die gedruckten Karten: genau 2 Seiten. Seite 1 = erster Abschnitt (Speisen),
+  // Seite 2 = Getränke + weitere Abschnitte (bei der Abendkarte Vesper & Salate).
+  var SEITE_MM = 297 - 13 - 16 - 3; // A4 minus Ränder (@page) minus Sicherheit
+  function einpassen(p) {
+    var mm = p.getBoundingClientRect().width / 176; // #print ist 176 mm breit
+    Array.prototype.forEach.call(p.querySelectorAll(".p-sheet"), function (s) {
+      var pt = 10.2;
+      s.style.fontSize = pt + "pt";
+      while (s.scrollHeight > SEITE_MM * mm && pt > 7.4) { pt = Math.round((pt - 0.2) * 10) / 10; s.style.fontSize = pt + "pt"; }
+    });
   }
   function drucken() {
     var sk = state.speisekarte, alt = document.getElementById("print");
     if (alt) alt.remove();
-    var fuss = function () { return null; }; // Preis-/Kontakthinweis steht im Seitenrand (@page, admin.css)
-    var drinks = function () { return blatt("Getränke", "", sk.getraenke.bereiche.map(function (b) { return druckBereich(b, false, true); }), fuss()); };
+    var drinks = sk.getraenke.bereiche.map(function (b) { return druckBereich(b, false, true); });
     var blaetter = [];
-    if (karteIdx === "getraenke") blaetter.push(drinks());
+    if (karteIdx === "getraenke" || karteIdx === "artikel") blaetter.push(blatt("Getränke", "", drinks));
     else {
       var k = sk.karten[karteIdx], nr = hatNr(k.bereiche);
-      blaetter.push(blatt(k.titel, k.untertitel, k.bereiche.map(function (b, i) { return druckBereich(b, !!k.menue && i === 0, nr); }), k.getraenke ? null : fuss()));
-      if (k.getraenke) blaetter.push(drinks());
+      blaetter.push(blatt(k.titel, k.untertitel, druckBereich(k.bereiche[0], !!k.menue, nr)));
+      var rest = k.bereiche.slice(1).map(function (b) { return druckBereich(b, false, nr); });
+      if (k.getraenke || rest.length) {
+        blaetter.push(blatt(k.getraenke ? "Getränke" : k.titel, "",
+          (k.getraenke ? drinks : []).concat(rest.length && k.getraenke ? [h("div", { class: "p-trenner" }, h("span", null, k.titel))] : [], rest), true));
+      }
     }
     var p = h("div", { id: "print", "aria-hidden": "true" }, blaetter);
     document.body.appendChild(p);
     var titel = document.title; document.title = " ";
-    var los = function () { window.print(); document.title = titel; };
+    var los = function () {
+      (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () {
+        einpassen(p); window.print(); document.title = titel;
+      });
+    };
     var img = p.querySelector("img");
-    if (img.complete) setTimeout(los, 50); else { img.onload = los; img.onerror = los; }
+    if (!img || img.complete) setTimeout(los, 50); else { img.onload = los; img.onerror = los; }
   }
 
   /* =====================================================================
@@ -441,7 +595,8 @@
     if (KEYS.indexOf(d.aktion) > -1) {
       if (d.aktion === "speisekarte") {
         var all = [d.daten.getraenke].concat(d.daten.karten);
-        all.forEach(function (k) { k.bereiche.forEach(function (b) { b.spalten.forEach(function (s) { s.forEach(function (g) { g.gerichte.forEach(function (x) {
+        (d.daten.artikel || []).forEach(function (x) { if (!x.name) throw new Error("Ein Artikel hat keinen Namen."); if (!/^\d{1,3},\d{2}$/.test(x.preis)) throw new Error("Preis bei „" + x.name + "“ bitte im Format 12,90 angeben."); });
+        all.forEach(function (k) { k.bereiche.forEach(function (b) { b.spalten.forEach(function (s) { s.forEach(function (g) { g.gerichte.forEach(function (x) { if (x.ref) return;
           if (!x.name) throw new Error("Ein Gericht hat keinen Namen.");
           if (!/^\d{1,3},\d{2}$/.test(x.preis)) throw new Error("Preis bei „" + x.name + "“ bitte im Format 12,90 angeben.");
         }); }); }); }); });
